@@ -1,0 +1,86 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.34928.147
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Services", "2 - Services", "{6742BEFD-A5DC-46C5-9779-6FCE35671E13}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 - Application", "3 - Application", "{E96F6D77-295D-4E22-9CDD-BCE2651EFEC5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4 - Domain", "4 - Domain", "{91309D18-77E9-4D64-A347-246CE3611733}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5 - Infra", "5 - Infra", "{94BF0F80-AC09-4266-911C-48560459F70E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5.1 - Data", "5.1 - Data", "{5FD0F9BB-894E-4999-9144-01C451A15E05}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5.2 - CrossCutting", "5.2 - CrossCutting", "{CD1EC7EF-6723-4594-910C-441EFEF1338B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{FB50EC37-D448-49C5-8C7D-15429C2B4DB4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maliwan.Domain", "src\Maliwan.Domain\Maliwan.Domain.csproj", "{734FA809-968B-40C1-9403-41A7155EDD41}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maliwan.Infra.Data", "src\Maliwan.Infra.Data\Maliwan.Infra.Data.csproj", "{5106FCF4-4917-4ACF-988D-901A9ACC468F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maliwan.Domain.Core", "src\Maliwan.Domain.Core\Maliwan.Domain.Core.csproj", "{4C2C826B-D5DD-4FBC-88C6-F1E897B52B8F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maliwan.Infra.CrossCutting.IoC", "src\Maliwan.Infra.CrossCutting.IoC\Maliwan.Infra.CrossCutting.IoC.csproj", "{019C62E2-268A-4D78-AC39-8D0E72124D1A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maliwan.Application", "src\Maliwan.Application\Maliwan.Application.csproj", "{AAF13E63-AECB-437E-8B57-84DACAB03AF4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maliwan.Test", "tests\Maliwan.Test\Maliwan.Test.csproj", "{295B12C2-37FB-421A-BE28-03CC8E45C659}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maliwan.Service.Api", "src\Maliwan.Service.Api\Maliwan.Service.Api.csproj", "{FC2D1E74-DE49-4683-A306-37B2DA0E5E8A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{734FA809-968B-40C1-9403-41A7155EDD41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{734FA809-968B-40C1-9403-41A7155EDD41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{734FA809-968B-40C1-9403-41A7155EDD41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{734FA809-968B-40C1-9403-41A7155EDD41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5106FCF4-4917-4ACF-988D-901A9ACC468F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5106FCF4-4917-4ACF-988D-901A9ACC468F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5106FCF4-4917-4ACF-988D-901A9ACC468F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5106FCF4-4917-4ACF-988D-901A9ACC468F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C2C826B-D5DD-4FBC-88C6-F1E897B52B8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C2C826B-D5DD-4FBC-88C6-F1E897B52B8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C2C826B-D5DD-4FBC-88C6-F1E897B52B8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C2C826B-D5DD-4FBC-88C6-F1E897B52B8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{019C62E2-268A-4D78-AC39-8D0E72124D1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{019C62E2-268A-4D78-AC39-8D0E72124D1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{019C62E2-268A-4D78-AC39-8D0E72124D1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{019C62E2-268A-4D78-AC39-8D0E72124D1A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AAF13E63-AECB-437E-8B57-84DACAB03AF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AAF13E63-AECB-437E-8B57-84DACAB03AF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AAF13E63-AECB-437E-8B57-84DACAB03AF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AAF13E63-AECB-437E-8B57-84DACAB03AF4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{295B12C2-37FB-421A-BE28-03CC8E45C659}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{295B12C2-37FB-421A-BE28-03CC8E45C659}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{295B12C2-37FB-421A-BE28-03CC8E45C659}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{295B12C2-37FB-421A-BE28-03CC8E45C659}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC2D1E74-DE49-4683-A306-37B2DA0E5E8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC2D1E74-DE49-4683-A306-37B2DA0E5E8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC2D1E74-DE49-4683-A306-37B2DA0E5E8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC2D1E74-DE49-4683-A306-37B2DA0E5E8A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5FD0F9BB-894E-4999-9144-01C451A15E05} = {94BF0F80-AC09-4266-911C-48560459F70E}
+		{CD1EC7EF-6723-4594-910C-441EFEF1338B} = {94BF0F80-AC09-4266-911C-48560459F70E}
+		{734FA809-968B-40C1-9403-41A7155EDD41} = {91309D18-77E9-4D64-A347-246CE3611733}
+		{5106FCF4-4917-4ACF-988D-901A9ACC468F} = {5FD0F9BB-894E-4999-9144-01C451A15E05}
+		{4C2C826B-D5DD-4FBC-88C6-F1E897B52B8F} = {91309D18-77E9-4D64-A347-246CE3611733}
+		{019C62E2-268A-4D78-AC39-8D0E72124D1A} = {CD1EC7EF-6723-4594-910C-441EFEF1338B}
+		{AAF13E63-AECB-437E-8B57-84DACAB03AF4} = {E96F6D77-295D-4E22-9CDD-BCE2651EFEC5}
+		{295B12C2-37FB-421A-BE28-03CC8E45C659} = {FB50EC37-D448-49C5-8C7D-15429C2B4DB4}
+		{FC2D1E74-DE49-4683-A306-37B2DA0E5E8A} = {6742BEFD-A5DC-46C5-9779-6FCE35671E13}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E7FEC2C0-DAE5-43B7-9F85-C4CA6EEE9595}
+	EndGlobalSection
+EndGlobal
