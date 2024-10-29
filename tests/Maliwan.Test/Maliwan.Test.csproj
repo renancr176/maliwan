@@ -38,4 +38,18 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+    <Folder Include="Fixtures\" />
+    <Folder Include="IntegrationTests\Config\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Maliwan.Application\Maliwan.Application.csproj" />
+    <ProjectReference Include="..\..\src\Maliwan.Domain.Core\Maliwan.Domain.Core.csproj" />
+    <ProjectReference Include="..\..\src\Maliwan.Domain\Maliwan.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Maliwan.Infra.Data\Maliwan.Infra.Data.csproj" />
+    <ProjectReference Include="..\..\src\Maliwan.Service.Api\Maliwan.Service.Api.csproj" />
+  </ItemGroup>
+
 </Project>

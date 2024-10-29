@@ -15,4 +15,11 @@
     <ProjectReference Include="..\Maliwan.Domain.Core\Maliwan.Domain.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="IdentityContext\Entities\" />
+    <Folder Include="IdentityContext\Interfaces\Repositories\" />
+    <Folder Include="IdentityContext\Interfaces\Validators\" />
+    <Folder Include="IdentityContext\Validators\" />
+  </ItemGroup>
+
 </Project>

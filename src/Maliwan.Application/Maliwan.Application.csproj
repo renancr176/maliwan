@@ -20,4 +20,14 @@
     <ProjectReference Include="..\Maliwan.Domain\Maliwan.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="AutoMapper\" />
+    <Folder Include="Commands\IdentityContext\UserCommands\" />
+    <Folder Include="Models\IdentityContext\Queries\" />
+    <Folder Include="Models\IdentityContext\Responses\" />
+    <Folder Include="Events\" />
+    <Folder Include="Queries\Interfaces\" />
+    <Folder Include="Services\Interfaces\" />
+  </ItemGroup>
+
 </Project>

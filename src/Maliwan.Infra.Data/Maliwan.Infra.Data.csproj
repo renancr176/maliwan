@@ -34,4 +34,9 @@
     <ProjectReference Include="..\Maliwan.Domain\Maliwan.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Contexts\IdentityDb\Mappings\" />
+    <Folder Include="Contexts\IdentityDb\Repositories\" />
+  </ItemGroup>
+
 </Project>

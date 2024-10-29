@@ -22,4 +22,11 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DomainObjects\" />
+    <Folder Include="Extensions\" />
+    <Folder Include="Enums\" />
+    <Folder Include="Messages\CommonMessages\Notifications\" />
+  </ItemGroup>
+
 </Project>
