@@ -7,6 +7,7 @@ using Maliwan.Domain.Core.Messages.CommonMessages.Notifications;
 using Maliwan.Domain.Core.Options;
 using Maliwan.Domain.IdentityContext.Validators;
 using Maliwan.Infra.Data.Contexts.IdentityDb;
+using Maliwan.Infra.Data.Contexts.MaliwanDb;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,6 +30,7 @@ public static class DependencyInjection
         #region DbContexts
 
         services.AddIdentityDb(configuration);
+        services.AddMaliwanDb(configuration);
 
         #endregion
 

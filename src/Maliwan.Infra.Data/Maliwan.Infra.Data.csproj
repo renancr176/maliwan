@@ -36,7 +36,11 @@
 
   <ItemGroup>
     <Folder Include="Contexts\IdentityDb\Mappings\" />
+    <Folder Include="Contexts\IdentityDb\Migrations\" />
     <Folder Include="Contexts\IdentityDb\Repositories\" />
+    <Folder Include="Contexts\MaliwanDb\Mappings\" />
+    <Folder Include="Contexts\MaliwanDb\Seeders\" />
+    <Folder Include="Contexts\MaliwanDb\Repositories\" />
   </ItemGroup>
 
 </Project>

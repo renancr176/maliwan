@@ -23,6 +23,7 @@ using Maliwan.Service.Api.Filters;
 using Maliwan.Service.Api.Middlewares;
 using Maliwan.Service.Api.Models.Responses;
 using Maliwan.Service.Api.Scheduler;
+using Maliwan.Infra.Data.Contexts.MaliwanDb;
 
 namespace Maliwan.Service.Api;
 
@@ -266,6 +267,7 @@ public class Startup : IStartup
         if (Environment?.IsProduction() ?? false)
         {
             serviceProvider.IdentityDbMigrate();
+            serviceProvider.MaliwanDbMigrate();
         }
     }
 }

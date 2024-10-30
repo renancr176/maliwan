@@ -12,6 +12,7 @@ using System.Reflection;
 using System.Text.Json.Serialization;
 using Maliwan.Domain.Core.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Maliwan.Infra.Data.Contexts.MaliwanDb;
 
 namespace Maliwan.Service.Api;
 
@@ -96,6 +97,8 @@ public class StartupTests
 
     private void Init(IServiceProvider serviceProvider)
     {
+        #region SqlServer Script
+        
         var scriptClearDataBase = @"USE #DbName;
         DECLARE @Sql NVARCHAR(500) DECLARE @Cursor CURSOR
 
@@ -133,20 +136,22 @@ public class StartupTests
 
         #endregion
 
-        #region DigaXDbContext
+        #region MaliwanDbContext
 
-        //var dbName = Configuration.GetSection("ConnectionStrings:DefaultConnection").Value
-        //    .Split(";")
-        //    .FirstOrDefault(i => i.ToLower().Contains("database=".ToLower()))
-        //    .Split("=")
-        //    .LastOrDefault();
+        var dbName = Configuration.GetSection("ConnectionStrings:DefaultConnection").Value
+            .Split(";")
+            .FirstOrDefault(i => i.ToLower().Contains("database=".ToLower()))
+            .Split("=")
+            .LastOrDefault();
 
-        //var defaultDbContext = serviceProvider.GetService<DigaXDbContext>();
+        var defaultDbContext = serviceProvider.GetService<MaliwanDbContext>();
 
-        ////Delete all tables before run migrations
-        //defaultDbContext.Database.ExecuteSqlRaw(scriptClearDataBase.Replace("#DbName", dbName));
+        //Delete all tables before run migrations
+        defaultDbContext.Database.ExecuteSqlRaw(scriptClearDataBase.Replace("#DbName", dbName));
 
-        //serviceProvider.DigaXDbMigrate();
+        serviceProvider.MaliwanDbMigrate();
+
+        #endregion
 
         #endregion
     }

@@ -2,7 +2,6 @@
 using Maliwan.Infra.Data.Contexts.IdentityDb.Repositories;
 using Maliwan.Infra.Data.Contexts.IdentityDb.Seeders;
 using Maliwan.Infra.Data.Contexts.IdentityDb.Seeders.Interfaces;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,6 +15,10 @@ public static class IdentityDb
         services.AddDbContext<IdentityDbContext>(dbContextOptions =>
             dbContextOptions.UseSqlServer(configuration.GetConnectionString("IdentityConnection"),
                 options => options.EnableRetryOnFailure()));
+
+        //services.AddDbContext<IdentityDbContext>(dbContextOptions =>
+        //    dbContextOptions.UseMySql(configuration.GetConnectionString("IdentityConnection"),
+        //        ServerVersion.AutoDetect(configuration.GetConnectionString("IdentityConnection"))));
 
         #region Repositories
 

@@ -1,20 +1,39 @@
 ## Banco de dados
 
-Abra o "Package Manager Console" e selecione o projeto "DigaX.Infra.Data" como opção do "Default project"
+### Maliwan Context
+
+Documentação das [migrations.](https://docs.microsoft.com/pt-br/ef/core/managing-schemas/migrations/)
+
+Abra o "Package Manager Console" e selecione o projeto "Maliwan.Infra.Data" como opção do "Default project"
 
 Comando para gerar uma nova migration
 ```bash
-Add-Migration NomeDaMigration -Context DigaXDbContext -OutputDir Contexts/DigaXDb/Migrations
+Add-Migration NomeDaMigration -Context MaliwanDbContext -OutputDir Contexts/MaliwanDb/Migrations
 ```
 Para aplicar a nova migration no banco de dados.
 ```bash
-Update-Database -Context DigaXDbContext
+Update-Database -Context MaliwanDbContext
 ```
 
 Para desfazer a ultima migration.
 ```bash
-Update-Database NomeDaPenultimaMigration -Context DigaXDbContext
-Remove-Migration -Context DigaXDbContext
+Update-Database NomeDaPenultimaMigration -Context MaliwanDbContext
+Remove-Migration -Context MaliwanDbContext
 ```
 
-Documentação das [migrations.](https://docs.microsoft.com/pt-br/ef/core/managing-schemas/migrations/)
+### Identity Context
+
+Comando para gerar uma nova migration
+```bash
+Add-Migration NomeDaMigration -Context IdentityDbContext -OutputDir Contexts/IdentityDb/Migrations
+```
+Para aplicar a nova migration no banco de dados.
+```bash
+Update-Database -Context IdentityDbContext
+```
+
+Para desfazer a ultima migration.
+```bash
+Update-Database NomeDaPenultimaMigration -Context IdentityDbContext
+Remove-Migration -Context IdentityDbContext
+```

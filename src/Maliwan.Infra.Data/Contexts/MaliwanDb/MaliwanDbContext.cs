@@ -1,23 +1,17 @@
 ﻿using Maliwan.Domain.Core.Data;
 using Maliwan.Domain.Core.Messages;
-using Maliwan.Domain.IdentityContext.Entities;
-using Maliwan.Infra.Data.Contexts.IdentityDb.Mappings;
 using MediatR;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace Maliwan.Infra.Data.Contexts.IdentityDb;
+namespace Maliwan.Infra.Data.Contexts.MaliwanDb;
 
-public class IdentityDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid, IdentityUserClaim<Guid>
-    , IdentityUserRole<Guid>, IdentityUserLogin<Guid>, IdentityRoleClaim<Guid>, IdentityUserToken<Guid>>
-    , IUnitOfWork
+public class MaliwanDbContext : DbContext, IUnitOfWork
 {
     private readonly IMediator _mediatorHandler;
 
-    public IdentityDbContext(DbContextOptions<IdentityDbContext> options, IMediator mediatorHandler)
+    public MaliwanDbContext(DbContextOptions<MaliwanDbContext> options, IMediator mediatorHandler)
         : base(options)
     {
         _mediatorHandler = mediatorHandler;
@@ -27,7 +21,7 @@ public class IdentityDbContext : IdentityDbContext<User, IdentityRole<Guid>, Gui
 
     #region DbSets
 
-    public DbSet<RefreshToken> RefreshTokens { get; set; }
+    //public DbSet<Object> Objects { get; set; }
 
     #endregion
 
@@ -36,14 +30,15 @@ public class IdentityDbContext : IdentityDbContext<User, IdentityRole<Guid>, Gui
         if (!optionsBuilder.IsConfigured)
         {
             var config = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
-                .Build();
+               .SetBasePath(Directory.GetCurrentDirectory())
+               .AddJsonFile("appsettings.json")
+               .Build();
 
-            optionsBuilder.UseSqlServer(config.GetConnectionString("IdentityConnection"));
+            optionsBuilder.UseSqlServer(config.GetConnectionString("DefaultConnection"),
+                options => options.EnableRetryOnFailure());
 
-            //optionsBuilder.UseMySql(config.GetConnectionString("IdentityConnection"),
-            //        ServerVersion.AutoDetect(config.GetConnectionString("IdentityConnection")));
+            //optionsBuilder.UseMySql(config.GetConnectionString("DefaultConnection"),
+            //        ServerVersion.AutoDetect(config.GetConnectionString("DefaultConnection")));
         }
     }
 
@@ -55,8 +50,7 @@ public class IdentityDbContext : IdentityDbContext<User, IdentityRole<Guid>, Gui
 
         #region Mappings
 
-        builder.ApplyConfiguration(new UserMapping());
-        builder.ApplyConfiguration(new RefreshTokenMapping());
+        //builder.ApplyConfiguration(new ObjectMapping());
 
         #endregion
     }
