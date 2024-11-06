@@ -17,6 +17,13 @@ public static class HttpClientExtensions
         return client;
     }
 
+    public static HttpClient RemoveToken(this HttpClient client)
+    {
+        client = client.AddJsonMediaType();
+        client.DefaultRequestHeaders.Authorization = null;
+        return client;
+    }
+
     public static HttpClient AddJsonMediaType(this HttpClient client)
     {
         client.DefaultRequestHeaders.Clear();

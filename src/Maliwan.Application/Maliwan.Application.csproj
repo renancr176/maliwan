@@ -26,7 +26,8 @@
     <Folder Include="Models\IdentityContext\Queries\" />
     <Folder Include="Models\IdentityContext\Responses\" />
     <Folder Include="Events\" />
-    <Folder Include="Queries\Interfaces\" />
+    <Folder Include="Models\MaliwanContext\Queries\Responses\" />
+    <Folder Include="Queries\MaliwanContext\Interfaces\" />
     <Folder Include="Services\Interfaces\" />
   </ItemGroup>
 

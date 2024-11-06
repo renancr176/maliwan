@@ -1,6 +1,8 @@
 ﻿using Maliwan.Domain.Core.DomainObjects;
 using System.Linq.Expressions;
 using Maliwan.Domain.Core.Enums;
+using Maliwan.Domain.Core.Requests;
+using Maliwan.Domain.Core.Responses;
 
 namespace Maliwan.Domain.Core.Data;
 
@@ -13,10 +15,10 @@ public interface IRepository<TEntity> : IDisposable
     Task InsertRangeAsync(ICollection<TEntity> obj);
     Task<TEntity?> GetByIdAsync(Guid id, IEnumerable<string> includes = null);
     Task<IEnumerable<TEntity>?> GetAllAsync(IEnumerable<string> includes = null);
-    Task<IEnumerable<TEntity>?> GetPagedAsync(int pageIndex, int pageSize,
+    Task<PagedResponse<TEntity>?> GetPagedAsync(PagedRequest pagedRequest,
         Expression<Func<TEntity?, bool>> predicate = null,
         Dictionary<Expression<Func<TEntity, object>>, OrderByEnum> ordenations = null);
-    Task<IEnumerable<TEntity>?> GetPagedAsync(int pageIndex, int pageSize,
+    Task<PagedResponse<TEntity>?> GetPagedAsync(PagedRequest pagedRequest,
         IEnumerable<string> includes, Expression<Func<TEntity, bool>> predicate = null,
         Dictionary<Expression<Func<TEntity, object>>, OrderByEnum> ordenations = null);
     Task UpdateAsync(TEntity obj);
@@ -42,6 +44,6 @@ public interface IRepository<TEntity> : IDisposable
 public interface IRepositoryIntId<TEntity> : IRepository<TEntity>
     where TEntity : EntityIntId
 {
-    Task<TEntity?> GetByIdAsync(int id);
+    Task<TEntity?> GetByIdAsync(int id, IEnumerable<string> includes = null);
     Task DeleteAsync(int id);
 }

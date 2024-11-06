@@ -1,4 +1,5 @@
-﻿using Maliwan.Domain.Core.DomainObjects;
+﻿using Maliwan.Domain.Core.Data;
+using Maliwan.Domain.Core.DomainObjects;
 
 namespace Maliwan.Infra.Data.Contexts.MaliwanDb;
 

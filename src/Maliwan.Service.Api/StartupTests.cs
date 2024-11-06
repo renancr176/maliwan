@@ -68,7 +68,7 @@ public class StartupTests
                     Options = options
                 });
         });
-
+        
         services.RegisterServices(Configuration);
 
         Init(services.BuildServiceProvider());

@@ -4,6 +4,8 @@ using Maliwan.Application.Commands.IdentityContext.UserCommands;
 using Maliwan.Application.Models.IdentityContext.Responses;
 using Maliwan.Domain.Core.Enums;
 using Maliwan.Domain.IdentityContext.Entities;
+using Maliwan.Domain.Maliwan.Entities;
+using Maliwan.Infra.Data.Contexts.MaliwanDb;
 using Maliwan.Service.Api.Models.Responses;
 using Maliwan.Service.Api;
 using Maliwan.Test.Extensions;
@@ -21,7 +23,7 @@ public class IntegrationTestsFixture<TStartup> : IDisposable where TStartup : cl
     public HttpClient Client;
     public EntityFixture EntityFixture;
     public IServiceProvider Services;
-    //public DigaXDbContext DigaXDbContext;
+    public MaliwanDbContext MaliwanDbContext;
     public UserManager<User> UserManager;
 
     public string AdminUserName { get; set; }
@@ -43,12 +45,12 @@ public class IntegrationTestsFixture<TStartup> : IDisposable where TStartup : cl
         AdminPassword = "g}}P9=#%2L~R,fH?=_<]76Dc#96@Em65";
 
         Services = Factory.Server.Services;
-        //DigaXDbContext = (DigaXDbContext)Services.GetService(typeof(DigaXDbContext));
+        MaliwanDbContext = (MaliwanDbContext)Services.GetService(typeof(MaliwanDbContext));
 
-        //if (DigaXDbContext == null)
-        //{
-        //    throw new ArgumentNullException(nameof(DigaXDbContext), "Database connection can't be null");
-        //}
+        if (MaliwanDbContext == null)
+        {
+            throw new ArgumentNullException(nameof(MaliwanDbContext), "Database connection can't be null");
+        }
 
         Task.Run(async () =>
         {
@@ -61,7 +63,7 @@ public class IntegrationTestsFixture<TStartup> : IDisposable where TStartup : cl
                     new User(
                         AdminUserName,
                         "Admin",
-                        "admin@digax.com.br",
+                        "admin@maliwan.com.br",
                         "Admin"),
                     AdminPassword);
 
@@ -72,7 +74,7 @@ public class IntegrationTestsFixture<TStartup> : IDisposable where TStartup : cl
                 await UserManager.AddToRoleAsync(user, RoleEnum.Admin.ToString());
             }
 
-            //await DigaXDbContext.SaveChangesAsync();
+            await MaliwanDbContext.SaveChangesAsync();
         }).Wait();
     }
 
@@ -158,6 +160,18 @@ public class IntegrationTestsFixture<TStartup> : IDisposable where TStartup : cl
             await AuthenticateAsUserAsync();
         }
     }
+
+    #region Inserted Entity
+
+    public async Task<Brand> GetInsertedNewBrandAsync()
+    {
+        var entity = EntityFixture.BrandFixture.Valid();
+        await MaliwanDbContext.Brands.AddAsync(entity);
+        await MaliwanDbContext.SaveChangesAsync();
+        return entity;
+    }
+
+    #endregion
 
     public void Dispose()
     {

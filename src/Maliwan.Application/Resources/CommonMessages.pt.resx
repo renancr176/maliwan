@@ -117,8 +117,8 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AlbumNotFound" xml:space="preserve">
-    <value>O album não foi encontrado.</value>
+  <data name="BrandNotFound" xml:space="preserve">
+    <value>Marca não encontrada.</value>
   </data>
   <data name="EmailNotConfirmed" xml:space="preserve">
     <value>E-mail não verificado, verifique seu e-mail e siga as instruções para confirmação por e-mail.</value>
@@ -159,9 +159,6 @@
   <data name="MetadataIsRequired" xml:space="preserve">
     <value>Os metadado do arquivo é obrigatório.</value>
   </data>
-  <data name="ObjectNotFound" xml:space="preserve">
-    <value>O objeto não foi encontrado.</value>
-  </data>
   <data name="ObjectUploadAlreadyFinished" xml:space="preserve">
     <value>O carregamento do objeto já foi concluido.</value>
   </data>
@@ -172,10 +169,7 @@
     <value>Verifique seu e-mail para mais instruções.</value>
   </data>
   <data name="RelationshipNotFound" xml:space="preserve">
-    <value>O relacionamento não foi encontrada.</value>
-  </data>
-  <data name="TagNotFound" xml:space="preserve">
-    <value>A tag não foi encontrada.</value>
+    <value>O relacionamento não foi encontrado.</value>
   </data>
   <data name="UnableSendMail" xml:space="preserve">
     <value>Não é possível enviar e-mail.</value>

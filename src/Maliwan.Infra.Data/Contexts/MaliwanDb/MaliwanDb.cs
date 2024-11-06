@@ -1,4 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Maliwan.Domain.Maliwan.Interfaces.Repositories;
+using Maliwan.Infra.Data.Contexts.MaliwanDb.Repositories;
+using Maliwan.Infra.Data.Contexts.MaliwanDb.Seeders;
+using Maliwan.Infra.Data.Contexts.MaliwanDb.Seeders.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -17,13 +21,25 @@ public static class MaliwanDb
 
         #region Repositories
 
-        //services.AddScoped<IObjectRepository, ObjectRepository>();
+        services.AddScoped<IBrandRepository, BrandRepository>();
+        services.AddScoped<ICategoryRepository, CategoryRepository>();
+        services.AddScoped<ICustomerRepository, CustomerRepository>();
+        services.AddScoped<IGenderRepository, GenderRepository>();
+        services.AddScoped<IOrderItemRepository, OrderItemRepository>();
+        services.AddScoped<IOrderPaymentRepository, OrderPaymentRepository>();
+        services.AddScoped<IOrderRepository, OrderRepository>();
+        services.AddScoped<IPaymentMethodRepository, PaymentMethodRepository>();
+        services.AddScoped<IProductColorRepository, ProductColorRepository>();
+        services.AddScoped<IProductRepository, ProductRepository>();
+        services.AddScoped<IProductSizeRepository, ProductSizeRepository>();
+        services.AddScoped<IStockRepository, StockRepository>();
+        services.AddScoped<ISubcategoryRepository, SubcategoryRepository>();
 
         #endregion
 
         #region Seeders
 
-        //services.AddScoped<IObjectTypeSeed, ObjectTypeSeed>();
+        services.AddScoped<IGenderSeeder, GenderSeeder>();
 
         #endregion
     }
@@ -36,7 +52,7 @@ public static class MaliwanDb
         #region Seeders
 
         Task.Run(async () => {
-            //await serviceProvider.GetService<IObjectTypeSeed>().SeedAsync();
+            await serviceProvider.GetService<IGenderSeeder>().SeedAsync();
         }).Wait();
 
         #endregion

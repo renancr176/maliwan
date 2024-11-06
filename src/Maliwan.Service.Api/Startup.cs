@@ -85,17 +85,17 @@ public class Startup : IStartup
             c.IncludeXmlComments(filePath);
         });
 
-        if (Environment.IsProduction())
-        {
-            services.AddStackExchangeRedisCache(action => {
-                action.InstanceName = Configuration.GetValue<string>("Redis:InstanceName");
-                action.Configuration = Configuration.GetValue<string>("Redis:Connection");
-            });
-        }
-        else
-        {
+        //if (Environment.IsProduction())
+        //{
+        //    services.AddStackExchangeRedisCache(action => {
+        //        action.InstanceName = Configuration.GetValue<string>("Redis:InstanceName");
+        //        action.Configuration = Configuration.GetValue<string>("Redis:Connection");
+        //    });
+        //}
+        //else
+        //{
             services.AddDistributedMemoryCache();
-        }
+        //}
 
         services.Configure<ApiBehaviorOptions>(options =>
         {
@@ -229,7 +229,7 @@ public class Startup : IStartup
         }
 
         app.UseSwagger();
-        app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MVNOApi v1"));
+        app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Maliwan v1"));
 
         app.UseHttpsRedirection();
 

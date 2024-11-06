@@ -1,10 +1,11 @@
-﻿using Maliwan.Domain.Core.Data;
-using Maliwan.Domain.Core.DomainObjects;
+﻿using Maliwan.Domain.Core.DomainObjects;
 using Maliwan.Domain.Core.Enums;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using Maliwan.Domain.Core.Responses;
+using Maliwan.Domain.Core.Requests;
 
-namespace Maliwan.Infra.Data.Contexts;
+namespace Maliwan.Domain.Core.Data;
 
 public abstract class Repository<TDbContext, TEntity> : IRepository<TEntity>
     where TDbContext : DbContext, IUnitOfWork
@@ -122,14 +123,14 @@ public abstract class Repository<TDbContext, TEntity> : IRepository<TEntity>
         return await query.ToListAsync();
     }
 
-    public virtual async Task<IEnumerable<TEntity>?> GetPagedAsync(int pageIndex, int pageSize,
+    public virtual async Task<PagedResponse<TEntity>?> GetPagedAsync(PagedRequest pagedRequest,
         Expression<Func<TEntity, bool>> predicate = null,
         Dictionary<Expression<Func<TEntity, object>>, OrderByEnum> ordenations = null)
     {
-        return await GetPagedAsync(pageIndex, pageSize, null, predicate, ordenations);
+        return await GetPagedAsync(pagedRequest, null, predicate, ordenations);
     }
 
-    public virtual async Task<IEnumerable<TEntity>?> GetPagedAsync(int pageIndex, int pageSize,
+    public virtual async Task<PagedResponse<TEntity>?> GetPagedAsync(PagedRequest pagedRequest,
         IEnumerable<string> includes, Expression<Func<TEntity, bool>> predicate = null,
         Dictionary<Expression<Func<TEntity, object>>, OrderByEnum> ordenations = null)
     {
@@ -179,11 +180,19 @@ public abstract class Repository<TDbContext, TEntity> : IRepository<TEntity>
             }
         }
 
-        query = query.Skip((pageIndex - 1) * pageSize)
-            .Take(pageSize);
+        query = query.Skip((pagedRequest.PageIndex - 1) * pagedRequest.PageSize)
+            .Take(pagedRequest.PageSize);
 
-        return await query
-            .ToListAsync();
+        var totalCount = await BaseQuery.CountAsync(predicate ?? (entity => true));
+        var totalPages = (int)Math.Ceiling(totalCount / (double)pagedRequest.PageSize);
+
+        return new PagedResponse<TEntity>(
+            pagedRequest.PageIndex,
+            pagedRequest.PageSize,
+            totalCount,
+            totalPages,
+            await query.ToListAsync()
+        );
     }
 
     public virtual async Task DeleteAsync(Guid id)
@@ -246,9 +255,19 @@ public abstract class RepositoryIntId<TDbContext, TEntity> : Repository<TDbConte
     {
     }
 
-    public virtual async Task<TEntity?> GetByIdAsync(int id)
+    public virtual async Task<TEntity?> GetByIdAsync(int id, IEnumerable<string> includes = null)
     {
-        return await BaseQuery.FirstOrDefaultAsync(e => e.Id == id);
+        var query = BaseQuery;
+
+        if (includes != null && includes.Any())
+        {
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+        }
+
+        return await query.FirstOrDefaultAsync(e => e.Id == id);
     }
 
     public virtual async Task DeleteAsync(int id)

@@ -233,11 +233,6 @@ public static class StringExtensions
         return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
     }
 
-    public static string ToCurrencyString(this decimal ammount, string language = "pt-BR")
-    {
-        return ammount.ToString("C", new CultureInfo(language));
-    }
-
     public static string MaskCpfCnpj(this string documento)
     {
         if (!string.IsNullOrEmpty(documento) && !string.IsNullOrWhiteSpace(documento))
@@ -290,5 +285,11 @@ public static class StringExtensions
 
         for (var i = 0; i < s.Length; i += partLength)
             yield return s.Substring(i, Math.Min(partLength, s.Length - i));
+    }
+
+    public static bool IsValidHexColor(this string hexColor)
+    {
+        return Regex.IsMatch(hexColor, "^#(?:[0-9a-fA-F]{3}){1,2}$") ||
+               Regex.IsMatch(hexColor, "^#(?:[0-9a-fA-F]{3,4}){1,2}$");
     }
 }
