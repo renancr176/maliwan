@@ -8,5 +8,6 @@ public static class MaliwanContextQueriesIoC
     public static void AddMaliwanContextQueries(this IServiceCollection services)
     {
         services.AddScoped<IBrandQuery, BrandQuery>();
+        services.AddScoped<ICategoryQuery, CategoryQuery>();
     }
 }

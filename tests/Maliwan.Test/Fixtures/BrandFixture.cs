@@ -1,7 +1,6 @@
-﻿using System.Text.RegularExpressions;
-using Bogus;
-using Bogus.Extensions;
+﻿using Bogus;
 using Maliwan.Domain.Maliwan.Entities;
+using Maliwan.Test.Extensions;
 
 namespace Maliwan.Test.Fixtures;
 
@@ -14,20 +13,11 @@ public class BrandFixture : IDisposable
         Faker = new Faker("pt_BR");
     }
 
-    public string GetSku(string name)
-    {
-        var normalizedName = Regex.Replace(Regex.Replace(name, @"[^a-zA-Z0-9 \s+]", ""), @"\s+", " ").RemoveDiacritics();
-        return (normalizedName.Trim().Split(" ").Length > 1
-            ? $"{normalizedName.Trim().Split(" ")[0].ToCharArray()[0].ToString()}{normalizedName.Trim().Split(" ")[1].ToCharArray()[0].ToString()}"
-            : $"{Faker.PickRandom(normalizedName.Trim().ToCharArray()).ToString()}{Faker.PickRandom(normalizedName.Trim().ToCharArray()).ToString()}")
-            .ToUpper();
-    }
-
     public Brand Valid()
     {
         Faker = new Faker("pt_BR");
         var name = Faker.Company.CompanyName();
-        var sku = GetSku(name);
+        var sku = name.GetSku();
         return new Brand(name, sku, true);
     }
 

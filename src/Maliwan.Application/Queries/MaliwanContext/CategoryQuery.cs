@@ -1,22 +1,24 @@
-﻿using System.Linq.Expressions;
-using AutoMapper;
-using Maliwan.Application.Models.MaliwanContext;
+﻿using AutoMapper;
 using Maliwan.Application.Models.MaliwanContext.Queries.Requests;
+using Maliwan.Application.Models.MaliwanContext;
 using Maliwan.Application.Queries.MaliwanContext.Interfaces;
 using Maliwan.Application.Services.Interfaces;
 using Maliwan.Domain.Core.Enums;
-using Maliwan.Domain.Core.Extensions;
 using Maliwan.Domain.Core.Messages.CommonMessages.Notifications;
 using Maliwan.Domain.Core.Responses;
+using Maliwan.Domain.IdentityContext.Entities;
 using Maliwan.Domain.Maliwan.Entities;
 using Maliwan.Domain.Maliwan.Interfaces.Repositories;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Localization;
+using System.Linq.Expressions;
+using Maliwan.Domain.Core.Extensions;
 
 namespace Maliwan.Application.Queries.MaliwanContext;
 
-public class BrandQuery : IBrandQuery
+public class CategoryQuery : ICategoryQuery
 {
     private readonly IMediator _mediator;
     private readonly IMapper _mapper;
@@ -24,28 +26,31 @@ public class BrandQuery : IBrandQuery
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IStringLocalizer<CommonMessages> _commonMessagesLocalizer;
     private readonly IUserService _userService;
-    private readonly IBrandRepository _brandRepository;
+    private readonly ICategoryRepository _categoryRepository;
 
-    public BrandQuery(IMediator mediator, IMapper mapper, IHttpContextAccessor httpContextAccessor,
+    public CategoryQuery(IMediator mediator, IMapper mapper, IHttpContextAccessor httpContextAccessor,
         IStringLocalizer<CommonMessages> commonMessagesLocalizer, IUserService userService,
-        IBrandRepository brandRepository)
+        UserManager<User> userManager, ICategoryRepository categoryRepository)
     {
         _mediator = mediator;
         _mapper = mapper;
         _httpContextAccessor = httpContextAccessor;
         _commonMessagesLocalizer = commonMessagesLocalizer;
         _userService = userService;
-        _brandRepository = brandRepository;
+        _categoryRepository = categoryRepository;
     }
 
-    private IEnumerable<string> Includes = new List<string>();
+    private IEnumerable<string> Includes = new[]
+    {
+        nameof(Category.Subcategories)
+    };
 
-    public async Task<BrandModel?> GetByIdAsync(int id)
+    public async Task<CategoryModel?> GetByIdAsync(int id)
     {
         try
         {
             var isAdmin = await _userService.CurrentUserHasRole(RoleEnum.Admin);
-            return _mapper.Map<BrandModel>(await _brandRepository.FirstOrDefaultAsync(e => e.Id == id && (isAdmin || e.Active), Includes));
+            return _mapper.Map<CategoryModel>(await _categoryRepository.FirstOrDefaultAsync(e => e.Id == id && (isAdmin || e.Active), Includes));
         }
         catch (Exception e)
         {
@@ -57,12 +62,12 @@ public class BrandQuery : IBrandQuery
         return default;
     }
 
-    public async Task<IEnumerable<BrandModel>?> GetAllAsync()
+    public async Task<IEnumerable<CategoryModel>?> GetAllAsync()
     {
         try
         {
             var isAdmin = await _userService.CurrentUserHasRole(RoleEnum.Admin);
-            return _mapper.Map<IEnumerable<BrandModel>>(await _brandRepository.FindAsync(e => isAdmin || e.Active, Includes));
+            return _mapper.Map<IEnumerable<CategoryModel>>(await _categoryRepository.FindAsync(e => isAdmin || e.Active, Includes));
         }
         catch (Exception e)
         {
@@ -74,7 +79,7 @@ public class BrandQuery : IBrandQuery
         return default;
     }
 
-    public async Task<PagedResponse<BrandModel>?> SearchAsync(BrandSearchRequest request)
+    public async Task<PagedResponse<CategoryModel>?> SearchAsync(CategorySearchRequest request)
     {
         try
         {
@@ -82,11 +87,11 @@ public class BrandQuery : IBrandQuery
 
             #region Be careful when changing the permissions check
 
-            Expression<Func<Brand, bool>> permitions = e => isAdmin || e.Active;
+            Expression<Func<Category, bool>> permitions = e => isAdmin || e.Active;
 
             #endregion
 
-            Expression<Func<Brand, bool>> filters = null;
+            Expression<Func<Category, bool>> filters = e => true;
 
             switch (request.ConditionType)
             {
@@ -106,12 +111,12 @@ public class BrandQuery : IBrandQuery
 
             var combined = permitions.AndAlso(filters);
 
-            return _mapper.Map<PagedResponse<BrandModel>>(
-                await _brandRepository.GetPagedAsync(
-                    request, 
+            return _mapper.Map<PagedResponse<CategoryModel>>(
+                await _categoryRepository.GetPagedAsync(
+                    request,
                     Includes,
                     combined,
-                    new Dictionary<Expression<Func<Brand, object>>, OrderByEnum>()
+                    new Dictionary<Expression<Func<Category, object>>, OrderByEnum>()
                     {
                         {e => e.Name, OrderByEnum.Ascending}
                     }));

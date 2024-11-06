@@ -19,12 +19,17 @@ public class CategoryValidator : EntityValidator<Category>, ICategoryValidator
     #endregion
 
     private readonly IStringLocalizer<CategoryValidator> _localizer;
+    private readonly ISubcategoryValidator _subcategoryValidator;
     private readonly ICategoryRepository _categoryRepository;
 
-    public CategoryValidator(IStringLocalizer<CategoryValidator> localizer, ICategoryRepository categoryRepository)
+    public CategoryValidator(IStringLocalizer<CategoryValidator> localizer, ISubcategoryValidator subcategoryValidator, ICategoryRepository categoryRepository)
     {
         _localizer = localizer;
+        _subcategoryValidator = subcategoryValidator;
         _categoryRepository = categoryRepository;
+
+        RuleForEach(e => e.Subcategories)
+            .SetValidator(_subcategoryValidator);
 
         RuleFor(e => e.Name)
             .Cascade(CascadeMode.Stop)
@@ -34,7 +39,7 @@ public class CategoryValidator : EntityValidator<Category>, ICategoryValidator
             .NotEmpty()
             .WithErrorCode(nameof(NameIsRequired))
             .WithMessage(_localizer.GetString(nameof(NameIsRequired)))
-            .MaximumLength(3)
+            .MinimumLength(3)
             .WithErrorCode(nameof(NameMinLength))
             .WithMessage(_localizer.GetString(nameof(NameMinLength)).ToString().Replace("#MinLenght", "3"))
             .MaximumLength(255)

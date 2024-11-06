@@ -3,15 +3,16 @@ using Maliwan.Application.Models.MaliwanContext;
 using Maliwan.Application.Services.Interfaces;
 using Maliwan.Domain.Core.Enums;
 using Maliwan.Domain.Core.Messages.CommonMessages.Notifications;
+using Maliwan.Domain.Maliwan.Entities;
 using Maliwan.Domain.Maliwan.Interfaces.Repositories;
 using Maliwan.Domain.Maliwan.Interfaces.Validators;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
 
-namespace Maliwan.Application.Commands.MaliwanContext.BrandCommands;
+namespace Maliwan.Application.Commands.MaliwanContext.CategoryCommands;
 
-public class UpdateBrandCommandHandler : IRequestHandler<UpdateBrandCommand, BrandModel?>
+public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryCommand, CategoryModel?>
 {
     private readonly IMediator _mediator;
     private readonly IMapper _mapper;
@@ -19,23 +20,23 @@ public class UpdateBrandCommandHandler : IRequestHandler<UpdateBrandCommand, Bra
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IUserService _userService;
     private readonly IStringLocalizer<CommonMessages> _commonMessagesLocalizer;
-    private readonly IBrandRepository _brandRepository;
-    private readonly IBrandValidator _brandValidator;
+    private readonly ICategoryRepository _categoryRepository;
+    private readonly ICategoryValidator _categoryValidator;
 
-    public UpdateBrandCommandHandler(IMediator mediator, IMapper mapper, IHttpContextAccessor httpContextAccessor,
+    public CreateCategoryCommandHandler(IMediator mediator, IMapper mapper, IHttpContextAccessor httpContextAccessor,
         IUserService userService, IStringLocalizer<CommonMessages> commonMessagesLocalizer,
-        IBrandRepository brandRepository, IBrandValidator brandValidator)
+        ICategoryRepository categoryRepository, ICategoryValidator categoryValidator)
     {
         _mediator = mediator;
         _mapper = mapper;
         _httpContextAccessor = httpContextAccessor;
         _userService = userService;
         _commonMessagesLocalizer = commonMessagesLocalizer;
-        _brandRepository = brandRepository;
-        _brandValidator = brandValidator;
+        _categoryRepository = categoryRepository;
+        _categoryValidator = categoryValidator;
     }
 
-    public async Task<BrandModel?> Handle(UpdateBrandCommand command, CancellationToken cancellationToken)
+    public async Task<CategoryModel?> Handle(CreateCategoryCommand command, CancellationToken cancellationToken)
     {
         try
         {
@@ -46,36 +47,26 @@ public class UpdateBrandCommandHandler : IRequestHandler<UpdateBrandCommand, Bra
                     _commonMessagesLocalizer.GetString(nameof(CommonMessages.Unauthorized))));
                 return default;
             }
-
-            var entity = await _brandRepository.GetByIdAsync(command.Id);
-
-            if (entity == null)
-            {
-                await _mediator.Publish(new DomainNotification(
-                    nameof(CommonMessages.BrandNotFound),
-                    _commonMessagesLocalizer.GetString(nameof(CommonMessages.BrandNotFound))));
-            }
-
-            entity = _mapper.Map(command, entity);
+            var entity = _mapper.Map<Category>(command);
 
             if (!command.AggregateId.HasValue)
-                await _brandRepository.UnitOfWork.BeginTransaction();
+                await _categoryRepository.UnitOfWork.BeginTransaction();
 
-            if (!await _brandValidator.IsValidAsync(entity))
+            if (!await _categoryValidator.IsValidAsync(entity))
             {
-                foreach (var error in _brandValidator.ValidationResult.Errors)
+                foreach (var error in _categoryValidator.ValidationResult.Errors)
                 {
                     await _mediator.Publish(_mapper.Map<DomainNotification>(error));
                 }
                 return default;
             }
 
-            await _brandRepository.UpdateAsync(entity);
+            await _categoryRepository.InsertAsync(entity);
 
             if (!command.AggregateId.HasValue)
-                await _brandRepository.UnitOfWork.Commit();
+                await _categoryRepository.UnitOfWork.Commit();
 
-            return _mapper.Map<BrandModel>(entity);
+            return _mapper.Map<CategoryModel>(entity);
         }
         catch (Exception e)
         {

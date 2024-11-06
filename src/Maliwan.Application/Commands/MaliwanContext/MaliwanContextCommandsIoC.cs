@@ -1,4 +1,5 @@
 ﻿using Maliwan.Application.Commands.MaliwanContext.BrandCommands;
+using Maliwan.Application.Commands.MaliwanContext.CategoryCommands;
 using Maliwan.Application.Models.MaliwanContext;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,6 +15,14 @@ public static class MaliwanContextCommandsIoC
         services.AddScoped<IRequestHandler<CreateBrandCommand, BrandModel?>, CreateBrandCommandHandler>();
         services.AddScoped<IRequestHandler<UpdateBrandCommand, BrandModel?>, UpdateBrandCommandHandler>();
         services.AddScoped<IRequestHandler<DeleteBrandCommand, bool>, DeleteBrandCommandHandler>();
+
+        #endregion
+
+        #region Category
+
+        services.AddScoped<IRequestHandler<CreateCategoryCommand, CategoryModel?>, CreateCategoryCommandHandler>();
+        services.AddScoped<IRequestHandler<UpdateCategoryCommand, CategoryModel?>, UpdateCategoryCommandHandler>();
+        services.AddScoped<IRequestHandler<DeleteCategoryCommand, bool>, DeleteCategoryCommandHandler>();
 
         #endregion
     }

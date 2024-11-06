@@ -40,7 +40,7 @@ public class CreateBrandCommandHandler : IRequestHandler<CreateBrandCommand, Bra
     {
         try
         {
-            if (!_userService.UserId.HasValue || !await _userService.CurrentUserHasRole(RoleEnum.Admin))
+            if (!await _userService.CurrentUserHasRole(RoleEnum.Admin))
             {
                 await _mediator.Publish(new DomainNotification(
                     nameof(CommonMessages.Unauthorized),

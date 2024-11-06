@@ -6,29 +6,29 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
 
-namespace Maliwan.Application.Commands.MaliwanContext.BrandCommands;
+namespace Maliwan.Application.Commands.MaliwanContext.CategoryCommands;
 
-public class DeleteBrandCommandHandler : IRequestHandler<DeleteBrandCommand, bool>
+public class DeleteCategoryCommandHandler : IRequestHandler<DeleteCategoryCommand, bool>
 {
     private readonly IMediator _mediator;
     //private readonly ILog _log;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IUserService _userService;
     private readonly IStringLocalizer<CommonMessages> _commonMessagesLocalizer;
-    private readonly IBrandRepository _brandRepository;
+    private readonly ICategoryRepository _categoryRepository;
 
-    public DeleteBrandCommandHandler(IMediator mediator, IHttpContextAccessor httpContextAccessor,
+    public DeleteCategoryCommandHandler(IMediator mediator, IHttpContextAccessor httpContextAccessor,
         IUserService userService, IStringLocalizer<CommonMessages> commonMessagesLocalizer,
-        IBrandRepository brandRepository)
+        ICategoryRepository categoryRepository)
     {
         _mediator = mediator;
         _httpContextAccessor = httpContextAccessor;
         _userService = userService;
         _commonMessagesLocalizer = commonMessagesLocalizer;
-        _brandRepository = brandRepository;
+        _categoryRepository = categoryRepository;
     }
 
-    public async Task<bool> Handle(DeleteBrandCommand command, CancellationToken cancellationToken)
+    public async Task<bool> Handle(DeleteCategoryCommand command, CancellationToken cancellationToken)
     {
         try
         {
@@ -40,7 +40,7 @@ public class DeleteBrandCommandHandler : IRequestHandler<DeleteBrandCommand, boo
                 return default;
             }
 
-            var entity = await _brandRepository.GetByIdAsync(command.Id);
+            var entity = await _categoryRepository.GetByIdAsync(command.Id);
 
             if (entity == null)
             {
@@ -48,12 +48,12 @@ public class DeleteBrandCommandHandler : IRequestHandler<DeleteBrandCommand, boo
             }
 
             if (!command.AggregateId.HasValue)
-                await _brandRepository.UnitOfWork.BeginTransaction();
+                await _categoryRepository.UnitOfWork.BeginTransaction();
 
-            await _brandRepository.DeleteAsync(command.Id);
+            await _categoryRepository.DeleteAsync(command.Id);
 
             if (!command.AggregateId.HasValue)
-                await _brandRepository.UnitOfWork.Commit();
+                await _categoryRepository.UnitOfWork.Commit();
 
             return true;
         }

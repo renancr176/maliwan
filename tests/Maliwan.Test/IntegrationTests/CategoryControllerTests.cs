@@ -1,24 +1,24 @@
-﻿using FluentAssertions;
+﻿using System.Net.Http.Json;
+using FluentAssertions;
+using Maliwan.Application.Commands.MaliwanContext.CategoryCommands;
+using Maliwan.Application.Models.MaliwanContext.Queries.Requests;
 using Maliwan.Application.Models.MaliwanContext;
 using Maliwan.Domain.Core.Responses;
-using Maliwan.Service.Api;
 using Maliwan.Service.Api.Models.Responses;
+using Maliwan.Service.Api;
 using Maliwan.Test.Extensions;
 using Maliwan.Test.Fixtures;
 using Maliwan.Test.IntegrationTests.Config;
 using Microsoft.EntityFrameworkCore;
-using System.Net.Http.Json;
-using Maliwan.Application.Commands.MaliwanContext.BrandCommands;
-using Maliwan.Application.Models.MaliwanContext.Queries.Requests;
 
 namespace Maliwan.Test.IntegrationTests;
 
 [Collection(nameof(IntegrationTestsFixtureCollection))]
-public class BrandControllerTests
+public class CategoryControllerTests
 {
     private readonly IntegrationTestsFixture<StartupTests> _testsFixture;
 
-    public BrandControllerTests(IntegrationTestsFixture<StartupTests> testsFixture)
+    public CategoryControllerTests(IntegrationTestsFixture<StartupTests> testsFixture)
     {
         _testsFixture = testsFixture;
     }
@@ -32,18 +32,18 @@ public class BrandControllerTests
     #region Positive Cases
 
     [Trait("IntegrationTest", "Controllers")]
-    [Fact(DisplayName = "Get brand by Id should get it sucessfully.")]
-    public async Task GetById_GivenExistingBrand_ShouldGetSuccessfully()
+    [Fact(DisplayName = "Get category by Id should get it sucessfully.")]
+    public async Task GetById_GivenExistingCategory_ShouldGetSuccessfully()
     {
         // Arrange 
-        var entity = await _testsFixture.MaliwanDbContext.Brands
+        var entity = await _testsFixture.MaliwanDbContext.Categories
                          .FirstOrDefaultAsync(e => e.Active && !e.DeletedAt.HasValue)
-                     ?? await _testsFixture.GetInsertedNewBrandAsync();
+                     ?? await _testsFixture.GetInsertedNewCategoryAsync();
 
         // Act & Assert
         var responseObj = await _testsFixture.Client
             .RemoveToken()
-            .GetFromJsonAsync<BaseResponse<BrandModel?>>($"/Brand/{entity.Id}");
+            .GetFromJsonAsync<BaseResponse<CategoryModel?>>($"/Category/{entity.Id}");
 
         // Assert 
         responseObj.Should().NotBeNull();
@@ -53,25 +53,25 @@ public class BrandControllerTests
     }
 
     [Trait("IntegrationTest", "Controllers")]
-    [Fact(DisplayName = "Get all brands should get it sucessfully.")]
-    public async Task GetAll_GivenExistingBrand_ShouldGetSuccessfully()
+    [Fact(DisplayName = "Get all categorys should get it sucessfully.")]
+    public async Task GetAll_GivenExistingCategory_ShouldGetSuccessfully()
     {
         // Arrange 
-        var entity = await _testsFixture.MaliwanDbContext.Brands
+        var entity = await _testsFixture.MaliwanDbContext.Categories
                          .FirstOrDefaultAsync(e => e.Active && !e.DeletedAt.HasValue)
-                     ?? await _testsFixture.GetInsertedNewBrandAsync();
+                     ?? await _testsFixture.GetInsertedNewCategoryAsync();
 
-        if (!await _testsFixture.MaliwanDbContext.Brands.AnyAsync(e => !e.Active && !e.DeletedAt.HasValue))
+        if (!await _testsFixture.MaliwanDbContext.Categories.AnyAsync(e => !e.Active && !e.DeletedAt.HasValue))
         {
-            entity = new EntityFixture().BrandFixture.Valid();
+            entity = new EntityFixture().CategoryFixture.Valid();
             entity.Active = false;
-            await _testsFixture.MaliwanDbContext.Brands.AddAsync(entity);
+            await _testsFixture.MaliwanDbContext.Categories.AddAsync(entity);
         }
 
         // Act & Assert
         var responseObj = await _testsFixture.Client
             .RemoveToken()
-            .GetFromJsonAsync<BaseResponse<IEnumerable<BrandModel>?>>("/Brand");
+            .GetFromJsonAsync<BaseResponse<IEnumerable<CategoryModel>?>>("/Category");
 
         // Assert 
         responseObj.Should().NotBeNull();
@@ -82,20 +82,20 @@ public class BrandControllerTests
     }
 
     [Trait("IntegrationTest", "Controllers")]
-    [Fact(DisplayName = "Search brands should at least get a success response code 200/OK")]
-    public async Task Search_UserBrands_ShouldQuerySuccessfully()
+    [Fact(DisplayName = "Search categorys should at least get a success response code 200/OK")]
+    public async Task Search_UserCategorys_ShouldQuerySuccessfully()
     {
         // Arrange 
-        var entity = await _testsFixture.MaliwanDbContext.Brands
+        var entity = await _testsFixture.MaliwanDbContext.Categories
                          .FirstOrDefaultAsync(e => e.Active && !e.DeletedAt.HasValue)
-                     ?? await _testsFixture.GetInsertedNewBrandAsync();
+                     ?? await _testsFixture.GetInsertedNewCategoryAsync();
 
-        var request = new BrandSearchRequest(name: entity.Name);
+        var request = new CategorySearchRequest(name: entity.Name);
 
         // Act & Assert
         var responseObj = await _testsFixture.Client
             .RemoveToken()
-            .GetFromJsonAsync<BrandSearchRequest, BaseResponse<PagedResponse<BrandModel>?>>("/Brand/Search", request);
+            .GetFromJsonAsync<CategorySearchRequest, BaseResponse<PagedResponse<CategoryModel>?>>("/Category/Search", request);
 
         // Assert 
         responseObj.Should().NotBeNull();
@@ -107,8 +107,8 @@ public class BrandControllerTests
     }
 
     [Trait("IntegrationTest", "Controllers")]
-    [Fact(DisplayName = "Given valid brand should be created successfully.")]
-    public async Task Create_GivenValidBrand_ShouldCreateSuccessfully()
+    [Fact(DisplayName = "Given valid category should be created successfully.")]
+    public async Task Create_GivenValidCategory_ShouldCreateSuccessfully()
     {
         // Arrange 
         if (string.IsNullOrEmpty(_testsFixture.AdminAccessToken))
@@ -116,48 +116,46 @@ public class BrandControllerTests
             await _testsFixture.AuthenticateAsAdminAsync();
         }
 
-        var entity = new BrandFixture().Valid();
+        var entity = new CategoryFixture().Valid();
         var retry = 3;
-        while (retry > 0 && await _testsFixture.MaliwanDbContext.Brands.AnyAsync(e => 
-                   (e.Name.Trim().ToLower() == entity.Name.Trim().ToLower()
-                   || e.Sku.ToUpper() == entity.Sku.ToUpper())
-               && !e.DeletedAt.HasValue))
+        while (retry > 0 && await _testsFixture.MaliwanDbContext.Categories.AnyAsync(e =>
+                   e.Name.Trim().ToLower() == entity.Name.Trim().ToLower()
+                   && !e.DeletedAt.HasValue))
         {
-            entity = new BrandFixture().Valid();
+            entity = new CategoryFixture().Valid();
             retry--;
         }
 
-        var request = new CreateBrandCommand(
+        var request = new CreateCategoryCommand(
             entity.Name,
-            entity.Sku,
-            true
+            true,
+            null
             );
 
         // Act 
         var response = await _testsFixture.Client
             .AddToken(_testsFixture.AdminAccessToken)
-            .PostAsJsonAsync("/Brand", request);
+            .PostAsJsonAsync("/Category", request);
 
         // Assert 
         response.EnsureSuccessStatusCode();
-        var responseObj = await response.DeserializeObject<BaseResponse<BrandModel?>>();
+        var responseObj = await response.DeserializeObject<BaseResponse<CategoryModel?>>();
         responseObj.Success.Should().BeTrue();
         responseObj.Errors.Should().HaveCount(0);
     }
 
     [Trait("IntegrationTest", "Controllers")]
-    [Fact(DisplayName = "Given existing valid brand should be updated successfully.")]
-    public async Task Update_GivenExistingValidBrand_ShouldUpdateSuccessfully()
+    [Fact(DisplayName = "Given existing valid category should be updated successfully.")]
+    public async Task Update_GivenExistingValidCategory_ShouldUpdateSuccessfully()
     {
         // Arrange 
-        var entity = await _testsFixture.MaliwanDbContext.Brands
+        var entity = await _testsFixture.MaliwanDbContext.Categories
                          .FirstOrDefaultAsync(e => !e.DeletedAt.HasValue)
-            ?? await _testsFixture.GetInsertedNewBrandAsync();
+            ?? await _testsFixture.GetInsertedNewCategoryAsync();
 
-        var request = new UpdateBrandCommand(
+        var request = new UpdateCategoryCommand(
             entity.Id,
             entity.Name,
-            entity.Sku,
             !entity.Active);
 
         if (string.IsNullOrEmpty(_testsFixture.AdminAccessToken))
@@ -168,23 +166,23 @@ public class BrandControllerTests
         // Act 
         var response = await _testsFixture.Client
             .AddToken(_testsFixture.AdminAccessToken)
-            .PutAsJsonAsync("/Brand", request);
+            .PutAsJsonAsync("/Category", request);
 
         // Assert 
         response.EnsureSuccessStatusCode();
-        var responseObj = await response.DeserializeObject<BaseResponse<BrandModel?>>();
+        var responseObj = await response.DeserializeObject<BaseResponse<CategoryModel?>>();
         responseObj.Success.Should().BeTrue();
         responseObj.Errors.Should().HaveCount(0);
     }
 
     [Trait("IntegrationTest", "Controllers")]
-    [Fact(DisplayName = "Given existing brand should delete successfully.")]
-    public async Task Delete_GivenExistingBrand_ShouldDeleteSuccessfully()
+    [Fact(DisplayName = "Given existing category should delete successfully.")]
+    public async Task Delete_GivenExistingCategory_ShouldDeleteSuccessfully()
     {
         // Arrange 
-        var entity = await _testsFixture.MaliwanDbContext.Brands
+        var entity = await _testsFixture.MaliwanDbContext.Categories
                          .FirstOrDefaultAsync(e => !e.DeletedAt.HasValue)
-                     ?? await _testsFixture.GetInsertedNewBrandAsync();
+                     ?? await _testsFixture.GetInsertedNewCategoryAsync();
 
         if (string.IsNullOrEmpty(_testsFixture.AdminAccessToken))
         {
@@ -194,7 +192,7 @@ public class BrandControllerTests
         // Act 
         var response = await _testsFixture.Client
             .AddToken(_testsFixture.AdminAccessToken)
-            .DeleteAsync($"/Brand/{entity.Id}");
+            .DeleteAsync($"/Category/{entity.Id}");
 
         // Assert 
         response.EnsureSuccessStatusCode();

@@ -11,6 +11,7 @@ using Maliwan.Service.Api;
 using Maliwan.Test.Extensions;
 using Maliwan.Test.Fixtures;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Maliwan.Test.IntegrationTests.Config;
 
@@ -166,7 +167,28 @@ public class IntegrationTestsFixture<TStartup> : IDisposable where TStartup : cl
     public async Task<Brand> GetInsertedNewBrandAsync()
     {
         var entity = EntityFixture.BrandFixture.Valid();
+        while (await MaliwanDbContext.Brands.AnyAsync(e =>
+                   (e.Name.Trim().ToLower() == entity.Name.Trim().ToLower() 
+                   || e.Sku.Trim().ToLower() == entity.Sku.Trim().ToLower())
+                   && !e.DeletedAt.HasValue))
+        {
+            entity = EntityFixture.BrandFixture.Valid();
+        }
         await MaliwanDbContext.Brands.AddAsync(entity);
+        await MaliwanDbContext.SaveChangesAsync();
+        return entity;
+    }
+
+    public async Task<Category> GetInsertedNewCategoryAsync()
+    {
+        var entity = EntityFixture.CategoryFixture.Valid();
+        while (await MaliwanDbContext.Categories.AnyAsync(e =>
+                   e.Name.Trim().ToLower() == entity.Name.Trim().ToLower()
+                   && !e.DeletedAt.HasValue))
+        {
+            entity = EntityFixture.CategoryFixture.Valid();
+        }
+        await MaliwanDbContext.Categories.AddAsync(entity);
         await MaliwanDbContext.SaveChangesAsync();
         return entity;
     }
@@ -177,5 +199,6 @@ public class IntegrationTestsFixture<TStartup> : IDisposable where TStartup : cl
     {
         Client.Dispose();
         Factory.Dispose();
+        EntityFixture.Dispose();
     }
 }

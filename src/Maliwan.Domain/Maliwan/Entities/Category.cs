@@ -9,7 +9,7 @@ public class Category : EntityIntId
 
     #region Relationships
 
-    public virtual ICollection<Subcategory> SubCategories { get; set; }
+    public virtual ICollection<Subcategory> Subcategories { get; set; }
 
     #endregion
 

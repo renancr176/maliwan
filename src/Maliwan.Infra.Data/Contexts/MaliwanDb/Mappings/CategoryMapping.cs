@@ -34,7 +34,7 @@ public class CategoryMapping : EntityIntIdMap<Category>
 
         #region Relationships
 
-        builder.HasMany(e => e.SubCategories)
+        builder.HasMany(e => e.Subcategories)
             .WithOne(e => e.Category)
             .HasForeignKey(e => e.IdCategory);
 

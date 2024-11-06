@@ -726,7 +726,7 @@ namespace Maliwan.Infra.Data.Contexts.MaliwanDb.Migrations
             modelBuilder.Entity("Maliwan.Domain.Maliwan.Entities.Subcategory", b =>
                 {
                     b.HasOne("Maliwan.Domain.Maliwan.Entities.Category", "Category")
-                        .WithMany("SubCategories")
+                        .WithMany("Subcategories")
                         .HasForeignKey("IdCategory")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -741,7 +741,7 @@ namespace Maliwan.Infra.Data.Contexts.MaliwanDb.Migrations
 
             modelBuilder.Entity("Maliwan.Domain.Maliwan.Entities.Category", b =>
                 {
-                    b.Navigation("SubCategories");
+                    b.Navigation("Subcategories");
                 });
 
             modelBuilder.Entity("Maliwan.Domain.Maliwan.Entities.Customer", b =>

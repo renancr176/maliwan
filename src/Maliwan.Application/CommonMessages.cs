@@ -29,6 +29,7 @@ public class CommonMessages
     #region Entity messages
 
     public const string BrandNotFound = "Brand not found.";
+    public const string CategoryNotFound = "Category not found.";
 
     #endregion
 }

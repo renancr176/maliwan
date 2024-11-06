@@ -120,6 +120,9 @@
   <data name="BrandNotFound" xml:space="preserve">
     <value>Marca não encontrada.</value>
   </data>
+  <data name="CategoryNotFound" xml:space="preserve">
+    <value>Categoria não encontrada.</value>
+  </data>
   <data name="EmailNotConfirmed" xml:space="preserve">
     <value>E-mail não verificado, verifique seu e-mail e siga as instruções para confirmação por e-mail.</value>
   </data>

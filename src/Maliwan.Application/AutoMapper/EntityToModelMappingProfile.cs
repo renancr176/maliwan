@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Maliwan.Application.Models.IdentityContext;
 using Maliwan.Application.Models.MaliwanContext;
-using Maliwan.Domain.Core.Responses;
 using Maliwan.Domain.IdentityContext.Entities;
 using Maliwan.Domain.Maliwan.Entities;
 
@@ -17,11 +16,22 @@ public class EntityToModelMappingProfile : Profile
         CreateMap<User, UserModel>();
 
         #endregion
-
+        
         #region Maliwan Context
 
         CreateMap<Brand, BrandModel>();
-        CreateMap<PagedResponse<Brand>, PagedResponse<BrandModel>>();
+        CreateMap<Category, CategoryModel>();
+        CreateMap<Customer, CustomerModel>();
+        CreateMap<Gender, GenderModel>();
+        CreateMap<Order, OrderModel>();
+        CreateMap<OrderItem, OrderItemModel>();
+        CreateMap<OrderPayment, OrderPaymentModel>();
+        CreateMap<PaymentMethod, PaymentMethodModel>();
+        CreateMap<Product, ProductModel>();
+        CreateMap<ProductColor, ProductColorModel>();
+        CreateMap<ProductSize, ProductSizeModel>();
+        CreateMap<Stock, StockModel>();
+        CreateMap<Subcategory, SubcategoryModel>();
 
         #endregion
     }
