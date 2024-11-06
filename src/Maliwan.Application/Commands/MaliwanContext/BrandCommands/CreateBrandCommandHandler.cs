@@ -3,12 +3,12 @@ using Maliwan.Application.Models.MaliwanContext;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
-using Maliwan.Domain.Maliwan.Interfaces.Repositories;
-using Maliwan.Domain.Maliwan.Interfaces.Validators;
 using Maliwan.Domain.Core.Messages.CommonMessages.Notifications;
-using Maliwan.Domain.Maliwan.Entities;
 using Maliwan.Application.Services.Interfaces;
 using Maliwan.Domain.Core.Enums;
+using Maliwan.Domain.MaliwanContext.Entities;
+using Maliwan.Domain.MaliwanContext.Interfaces.Repositories;
+using Maliwan.Domain.MaliwanContext.Interfaces.Validators;
 
 namespace Maliwan.Application.Commands.MaliwanContext.BrandCommands;
 

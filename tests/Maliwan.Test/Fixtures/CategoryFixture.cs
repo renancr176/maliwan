@@ -1,5 +1,5 @@
 ﻿using Bogus;
-using Maliwan.Domain.Maliwan.Entities;
+using Maliwan.Domain.MaliwanContext.Entities;
 
 namespace Maliwan.Test.Fixtures;
 

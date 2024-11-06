@@ -1,5 +1,5 @@
-﻿using Maliwan.Domain.Maliwan.Entities;
-using Maliwan.Domain.Maliwan.Interfaces.Repositories;
+﻿using Maliwan.Domain.MaliwanContext.Entities;
+using Maliwan.Domain.MaliwanContext.Interfaces.Repositories;
 
 namespace Maliwan.Infra.Data.Contexts.MaliwanDb.Repositories;
 

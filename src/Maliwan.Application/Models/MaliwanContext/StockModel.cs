@@ -1,4 +1,4 @@
-﻿using Maliwan.Domain.Maliwan.Enums;
+﻿using Maliwan.Domain.MaliwanContext.Enums;
 
 namespace Maliwan.Application.Models.MaliwanContext;
 

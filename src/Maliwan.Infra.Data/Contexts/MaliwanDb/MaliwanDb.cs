@@ -1,4 +1,4 @@
-﻿using Maliwan.Domain.Maliwan.Interfaces.Repositories;
+﻿using Maliwan.Domain.MaliwanContext.Interfaces.Repositories;
 using Maliwan.Infra.Data.Contexts.MaliwanDb.Repositories;
 using Maliwan.Infra.Data.Contexts.MaliwanDb.Seeders;
 using Maliwan.Infra.Data.Contexts.MaliwanDb.Seeders.Interfaces;

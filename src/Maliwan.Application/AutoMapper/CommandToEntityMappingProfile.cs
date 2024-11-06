@@ -4,7 +4,7 @@ using Maliwan.Application.Commands.MaliwanContext.BrandCommands;
 using Maliwan.Application.Commands.MaliwanContext.CategoryCommands;
 using Maliwan.Application.Commands.MaliwanContext.SubcategoryCommands;
 using Maliwan.Domain.IdentityContext.Entities;
-using Maliwan.Domain.Maliwan.Entities;
+using Maliwan.Domain.MaliwanContext.Entities;
 
 namespace Maliwan.Application.AutoMapper;
 

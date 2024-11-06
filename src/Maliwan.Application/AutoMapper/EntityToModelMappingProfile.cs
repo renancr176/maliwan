@@ -2,7 +2,7 @@
 using Maliwan.Application.Models.IdentityContext;
 using Maliwan.Application.Models.MaliwanContext;
 using Maliwan.Domain.IdentityContext.Entities;
-using Maliwan.Domain.Maliwan.Entities;
+using Maliwan.Domain.MaliwanContext.Entities;
 
 namespace Maliwan.Application.AutoMapper;
 

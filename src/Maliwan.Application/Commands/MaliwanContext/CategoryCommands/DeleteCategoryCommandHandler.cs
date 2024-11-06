@@ -1,7 +1,7 @@
 ﻿using Maliwan.Application.Services.Interfaces;
 using Maliwan.Domain.Core.Enums;
 using Maliwan.Domain.Core.Messages.CommonMessages.Notifications;
-using Maliwan.Domain.Maliwan.Interfaces.Repositories;
+using Maliwan.Domain.MaliwanContext.Interfaces.Repositories;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;

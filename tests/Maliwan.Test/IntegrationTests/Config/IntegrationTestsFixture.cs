@@ -4,7 +4,7 @@ using Maliwan.Application.Commands.IdentityContext.UserCommands;
 using Maliwan.Application.Models.IdentityContext.Responses;
 using Maliwan.Domain.Core.Enums;
 using Maliwan.Domain.IdentityContext.Entities;
-using Maliwan.Domain.Maliwan.Entities;
+using Maliwan.Domain.MaliwanContext.Entities;
 using Maliwan.Infra.Data.Contexts.MaliwanDb;
 using Maliwan.Service.Api.Models.Responses;
 using Maliwan.Service.Api;

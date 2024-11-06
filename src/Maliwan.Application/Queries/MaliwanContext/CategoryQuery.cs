@@ -7,14 +7,14 @@ using Maliwan.Domain.Core.Enums;
 using Maliwan.Domain.Core.Messages.CommonMessages.Notifications;
 using Maliwan.Domain.Core.Responses;
 using Maliwan.Domain.IdentityContext.Entities;
-using Maliwan.Domain.Maliwan.Entities;
-using Maliwan.Domain.Maliwan.Interfaces.Repositories;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Localization;
 using System.Linq.Expressions;
 using Maliwan.Domain.Core.Extensions;
+using Maliwan.Domain.MaliwanContext.Entities;
+using Maliwan.Domain.MaliwanContext.Interfaces.Repositories;
 
 namespace Maliwan.Application.Queries.MaliwanContext;
 

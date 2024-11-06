@@ -1,6 +1,6 @@
 ﻿using Maliwan.Domain.Core.Data;
 using Maliwan.Domain.Core.Messages;
-using Maliwan.Domain.Maliwan.Entities;
+using Maliwan.Domain.MaliwanContext.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore;

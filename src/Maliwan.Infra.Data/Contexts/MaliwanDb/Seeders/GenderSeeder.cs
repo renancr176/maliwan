@@ -1,6 +1,6 @@
-﻿using Maliwan.Domain.Maliwan.Entities;
-using Maliwan.Domain.Maliwan.Interfaces.Repositories;
-using Maliwan.Domain.Maliwan.Interfaces.Validators;
+﻿using Maliwan.Domain.MaliwanContext.Entities;
+using Maliwan.Domain.MaliwanContext.Interfaces.Repositories;
+using Maliwan.Domain.MaliwanContext.Interfaces.Validators;
 using Maliwan.Infra.Data.Contexts.MaliwanDb.Seeders.Interfaces;
 
 namespace Maliwan.Infra.Data.Contexts.MaliwanDb.Seeders;
