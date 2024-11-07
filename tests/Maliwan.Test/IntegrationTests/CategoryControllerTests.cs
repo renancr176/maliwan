@@ -63,7 +63,7 @@ public class CategoryControllerTests
 
         if (!await _testsFixture.MaliwanDbContext.Categories.AnyAsync(e => !e.Active && !e.DeletedAt.HasValue))
         {
-            entity = new EntityFixture().CategoryFixture.Valid();
+            entity = _testsFixture.EntityFixture.CategoryFixture.Valid();
             entity.Active = false;
             await _testsFixture.MaliwanDbContext.Categories.AddAsync(entity);
         }

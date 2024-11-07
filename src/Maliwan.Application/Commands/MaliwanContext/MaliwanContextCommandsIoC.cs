@@ -1,5 +1,6 @@
 ﻿using Maliwan.Application.Commands.MaliwanContext.BrandCommands;
 using Maliwan.Application.Commands.MaliwanContext.CategoryCommands;
+using Maliwan.Application.Commands.MaliwanContext.SubcategoryCommands;
 using Maliwan.Application.Models.MaliwanContext;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,6 +24,16 @@ public static class MaliwanContextCommandsIoC
         services.AddScoped<IRequestHandler<CreateCategoryCommand, CategoryModel?>, CreateCategoryCommandHandler>();
         services.AddScoped<IRequestHandler<UpdateCategoryCommand, CategoryModel?>, UpdateCategoryCommandHandler>();
         services.AddScoped<IRequestHandler<DeleteCategoryCommand, bool>, DeleteCategoryCommandHandler>();
+
+        #endregion
+
+        #region Subcategory
+
+        services
+            .AddScoped<IRequestHandler<CreateSubcategoryCommand, SubcategoryModel?>, CreateSubcategoryCommandHandler>();
+        services
+            .AddScoped<IRequestHandler<UpdateSubcategoryCommand, SubcategoryModel?>, UpdateSubcategoryCommandHandler>();
+        services.AddScoped<IRequestHandler<DeleteSubcategoryCommand, bool>, DeleteSubcategoryCommandHandler>();
 
         #endregion
     }

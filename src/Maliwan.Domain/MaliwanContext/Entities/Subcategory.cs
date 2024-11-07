@@ -20,10 +20,11 @@ public class Subcategory : EntityIntId
     {
     }
 
-    public Subcategory(int idCategory, string name, bool active)
+    public Subcategory(int idCategory, string name, string sku, bool active = true)
     {
         IdCategory = idCategory;
         Name = name;
+        Sku = sku;
         Active = active;
     }
 }

@@ -1,24 +1,22 @@
 ﻿using AutoMapper;
-using Maliwan.Application.Models.MaliwanContext.Queries.Requests;
 using Maliwan.Application.Models.MaliwanContext;
+using Maliwan.Application.Models.MaliwanContext.Queries.Requests;
 using Maliwan.Application.Queries.MaliwanContext.Interfaces;
 using Maliwan.Application.Services.Interfaces;
 using Maliwan.Domain.Core.Enums;
 using Maliwan.Domain.Core.Messages.CommonMessages.Notifications;
 using Maliwan.Domain.Core.Responses;
-using Maliwan.Domain.IdentityContext.Entities;
+using Maliwan.Domain.MaliwanContext.Entities;
+using Maliwan.Domain.MaliwanContext.Interfaces.Repositories;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Localization;
 using System.Linq.Expressions;
 using Maliwan.Domain.Core.Extensions;
-using Maliwan.Domain.MaliwanContext.Entities;
-using Maliwan.Domain.MaliwanContext.Interfaces.Repositories;
 
 namespace Maliwan.Application.Queries.MaliwanContext;
 
-public class CategoryQuery : ICategoryQuery
+public class SubcategoryQuery : ISubcategoryQuery
 {
     private readonly IMediator _mediator;
     private readonly IMapper _mapper;
@@ -26,31 +24,28 @@ public class CategoryQuery : ICategoryQuery
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IStringLocalizer<CommonMessages> _commonMessagesLocalizer;
     private readonly IUserService _userService;
-    private readonly ICategoryRepository _categoryRepository;
+    private readonly ISubcategoryRepository _subcategoryRepository;
 
-    public CategoryQuery(IMediator mediator, IMapper mapper, IHttpContextAccessor httpContextAccessor,
+    public SubcategoryQuery(IMediator mediator, IMapper mapper, IHttpContextAccessor httpContextAccessor,
         IStringLocalizer<CommonMessages> commonMessagesLocalizer, IUserService userService,
-        UserManager<User> userManager, ICategoryRepository categoryRepository)
+        ISubcategoryRepository subcategoryRepository)
     {
         _mediator = mediator;
         _mapper = mapper;
         _httpContextAccessor = httpContextAccessor;
         _commonMessagesLocalizer = commonMessagesLocalizer;
         _userService = userService;
-        _categoryRepository = categoryRepository;
+        _subcategoryRepository = subcategoryRepository;
     }
 
-    private IEnumerable<string> Includes = new[]
-    {
-        nameof(Category.Subcategories)
-    };
+    private IEnumerable<string> Includes = null;
 
-    public async Task<CategoryModel?> GetByIdAsync(int id)
+    public async Task<SubcategoryModel?> GetByIdAsync(int id)
     {
         try
         {
             var isAdmin = await _userService.CurrentUserHasRole(RoleEnum.Admin);
-            return _mapper.Map<CategoryModel>(await _categoryRepository.FirstOrDefaultAsync(e => e.Id == id && (isAdmin || e.Active) && (isAdmin || e.Subcategories.All(e => e.Active)), Includes));
+            return _mapper.Map<SubcategoryModel>(await _subcategoryRepository.FirstOrDefaultAsync(e => e.Id == id && (isAdmin || e.Active), Includes));
         }
         catch (Exception e)
         {
@@ -62,12 +57,12 @@ public class CategoryQuery : ICategoryQuery
         return default;
     }
 
-    public async Task<IEnumerable<CategoryModel>?> GetAllAsync()
+    public async Task<IEnumerable<SubcategoryModel>?> GetAllAsync()
     {
         try
         {
             var isAdmin = await _userService.CurrentUserHasRole(RoleEnum.Admin);
-            return _mapper.Map<IEnumerable<CategoryModel>>(await _categoryRepository.FindAsync(e => (isAdmin || e.Active) && (isAdmin || e.Subcategories.All(e => e.Active)), Includes));
+            return _mapper.Map<IEnumerable<SubcategoryModel>>(await _subcategoryRepository.FindAsync(e => isAdmin || e.Active, Includes));
         }
         catch (Exception e)
         {
@@ -79,7 +74,7 @@ public class CategoryQuery : ICategoryQuery
         return default;
     }
 
-    public async Task<PagedResponse<CategoryModel>?> SearchAsync(CategorySearchRequest request)
+    public async Task<PagedResponse<SubcategoryModel>?> SearchAsync(SubcategorySearchRequest request)
     {
         try
         {
@@ -87,11 +82,11 @@ public class CategoryQuery : ICategoryQuery
 
             #region Be careful when changing the permissions check
 
-            Expression<Func<Category, bool>> permitions = e => (isAdmin || e.Active) && (isAdmin || e.Subcategories.All(e => e.Active));
+            Expression<Func<Subcategory, bool>> permitions = e => isAdmin || e.Active;
 
             #endregion
 
-            Expression<Func<Category, bool>> filters = e => true;
+            Expression<Func<Subcategory, bool>> filters = e => true;
 
             switch (request.ConditionType)
             {
@@ -111,12 +106,12 @@ public class CategoryQuery : ICategoryQuery
 
             var combined = permitions.AndAlso(filters);
 
-            return _mapper.Map<PagedResponse<CategoryModel>>(
-                await _categoryRepository.GetPagedAsync(
+            return _mapper.Map<PagedResponse<SubcategoryModel>>(
+                await _subcategoryRepository.GetPagedAsync(
                     request,
                     Includes,
                     combined,
-                    new Dictionary<Expression<Func<Category, object>>, OrderByEnum>()
+                    new Dictionary<Expression<Func<Subcategory, object>>, OrderByEnum>()
                     {
                         {e => e.Name, OrderByEnum.Ascending}
                     }));

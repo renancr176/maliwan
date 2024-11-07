@@ -193,6 +193,27 @@ public class IntegrationTestsFixture<TStartup> : IDisposable where TStartup : cl
         return entity;
     }
 
+    public async Task<Subcategory> GetInsertedNewSubcategoryAsync(Category category = null)
+    {
+        category = category ?? await MaliwanDbContext.Categories.FirstOrDefaultAsync(e => e.Active && !e.DeletedAt.HasValue)
+            ?? await GetInsertedNewCategoryAsync();
+
+        var entity = EntityFixture.SubcategoryFixture.Valid();
+        while (await MaliwanDbContext.Subcategories.AnyAsync(e =>
+                   e.IdCategory == category.Id
+                   && e.Name.Trim().ToLower() == entity.Name.Trim().ToLower()
+                   && !e.DeletedAt.HasValue))
+        {
+            entity = EntityFixture.SubcategoryFixture.Valid();
+        }
+
+        entity.IdCategory = category.Id;
+
+        await MaliwanDbContext.Subcategories.AddAsync(entity);
+        await MaliwanDbContext.SaveChangesAsync();
+        return entity;
+    }
+
     #endregion
 
     public void Dispose()

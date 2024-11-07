@@ -1,4 +1,7 @@
-﻿using FluentAssertions;
+﻿using System.Net.Http.Json;
+using FluentAssertions;
+using Maliwan.Application.Commands.MaliwanContext.SubcategoryCommands;
+using Maliwan.Application.Models.MaliwanContext.Queries.Requests;
 using Maliwan.Application.Models.MaliwanContext;
 using Maliwan.Domain.Core.Responses;
 using Maliwan.Service.Api;
@@ -7,18 +10,15 @@ using Maliwan.Test.Extensions;
 using Maliwan.Test.Fixtures;
 using Maliwan.Test.IntegrationTests.Config;
 using Microsoft.EntityFrameworkCore;
-using System.Net.Http.Json;
-using Maliwan.Application.Commands.MaliwanContext.BrandCommands;
-using Maliwan.Application.Models.MaliwanContext.Queries.Requests;
 
 namespace Maliwan.Test.IntegrationTests;
 
 [Collection(nameof(IntegrationTestsFixtureCollection))]
-public class BrandControllerTests
+public class SubcategoryControllerTests
 {
     private readonly IntegrationTestsFixture<StartupTests> _testsFixture;
 
-    public BrandControllerTests(IntegrationTestsFixture<StartupTests> testsFixture)
+    public SubcategoryControllerTests(IntegrationTestsFixture<StartupTests> testsFixture)
     {
         _testsFixture = testsFixture;
     }
@@ -32,18 +32,18 @@ public class BrandControllerTests
     #region Positive Cases
 
     [Trait("IntegrationTest", "Controllers")]
-    [Fact(DisplayName = "Get brand by Id should get it sucessfully.")]
-    public async Task GetById_GivenExistingBrand_ShouldGetSuccessfully()
+    [Fact(DisplayName = "Get subcategory by Id should get it sucessfully.")]
+    public async Task GetById_GivenExistingSubcategory_ShouldGetSuccessfully()
     {
         // Arrange 
-        var entity = await _testsFixture.MaliwanDbContext.Brands
+        var entity = await _testsFixture.MaliwanDbContext.Subcategories
                          .FirstOrDefaultAsync(e => e.Active && !e.DeletedAt.HasValue)
-                     ?? await _testsFixture.GetInsertedNewBrandAsync();
+                     ?? await _testsFixture.GetInsertedNewSubcategoryAsync();
 
         // Act & Assert
         var responseObj = await _testsFixture.Client
             .RemoveToken()
-            .GetFromJsonAsync<BaseResponse<BrandModel?>>($"/Brand/{entity.Id}");
+            .GetFromJsonAsync<BaseResponse<SubcategoryModel?>>($"/Subcategory/{entity.Id}");
 
         // Assert 
         responseObj.Should().NotBeNull();
@@ -53,25 +53,29 @@ public class BrandControllerTests
     }
 
     [Trait("IntegrationTest", "Controllers")]
-    [Fact(DisplayName = "Get all brands should get it sucessfully.")]
-    public async Task GetAll_GivenExistingBrand_ShouldGetSuccessfully()
+    [Fact(DisplayName = "Get all subcategorys should get it sucessfully.")]
+    public async Task GetAll_GivenExistingSubcategory_ShouldGetSuccessfully()
     {
         // Arrange 
-        var entity = await _testsFixture.MaliwanDbContext.Brands
-                         .FirstOrDefaultAsync(e => e.Active && !e.DeletedAt.HasValue)
-                     ?? await _testsFixture.GetInsertedNewBrandAsync();
+        var category = await _testsFixture.MaliwanDbContext.Categories
+                           .FirstOrDefaultAsync(e => e.Active && !e.DeletedAt.HasValue)
+                       ?? await _testsFixture.GetInsertedNewCategoryAsync();
+        var entity = await _testsFixture.MaliwanDbContext.Subcategories
+            .FirstOrDefaultAsync(e => e.IdCategory == category.Id && e.Active && !e.DeletedAt.HasValue)
+                     ?? await _testsFixture.GetInsertedNewSubcategoryAsync(category);
 
-        if (!await _testsFixture.MaliwanDbContext.Brands.AnyAsync(e => !e.Active && !e.DeletedAt.HasValue))
+        if (!await _testsFixture.MaliwanDbContext.Subcategories.AnyAsync(e => !e.Active && !e.DeletedAt.HasValue))
         {
-            entity = _testsFixture.EntityFixture.BrandFixture.Valid();
+            entity = new EntityFixture().SubcategoryFixture.Valid();
+            entity.IdCategory = category.Id;
             entity.Active = false;
-            await _testsFixture.MaliwanDbContext.Brands.AddAsync(entity);
+            await _testsFixture.MaliwanDbContext.Subcategories.AddAsync(entity);
         }
 
         // Act & Assert
         var responseObj = await _testsFixture.Client
             .RemoveToken()
-            .GetFromJsonAsync<BaseResponse<IEnumerable<BrandModel>?>>("/Brand");
+            .GetFromJsonAsync<BaseResponse<IEnumerable<SubcategoryModel>?>>("/Subcategory");
 
         // Assert 
         responseObj.Should().NotBeNull();
@@ -82,20 +86,20 @@ public class BrandControllerTests
     }
 
     [Trait("IntegrationTest", "Controllers")]
-    [Fact(DisplayName = "Search brands should at least get a success response code 200/OK")]
-    public async Task Search_UserBrands_ShouldQuerySuccessfully()
+    [Fact(DisplayName = "Search subcategorys should at least get a success response code 200/OK")]
+    public async Task Search_UserSubcategorys_ShouldQuerySuccessfully()
     {
         // Arrange 
-        var entity = await _testsFixture.MaliwanDbContext.Brands
+        var entity = await _testsFixture.MaliwanDbContext.Subcategories
                          .FirstOrDefaultAsync(e => e.Active && !e.DeletedAt.HasValue)
-                     ?? await _testsFixture.GetInsertedNewBrandAsync();
+                     ?? await _testsFixture.GetInsertedNewSubcategoryAsync();
 
-        var request = new BrandSearchRequest(name: entity.Name);
+        var request = new SubcategorySearchRequest(name: entity.Name);
 
         // Act & Assert
         var responseObj = await _testsFixture.Client
             .RemoveToken()
-            .GetFromJsonAsync<BrandSearchRequest, BaseResponse<PagedResponse<BrandModel>?>>("/Brand/Search", request);
+            .GetFromJsonAsync<SubcategorySearchRequest, BaseResponse<PagedResponse<SubcategoryModel>?>>("/Subcategory/Search", request);
 
         // Assert 
         responseObj.Should().NotBeNull();
@@ -107,8 +111,8 @@ public class BrandControllerTests
     }
 
     [Trait("IntegrationTest", "Controllers")]
-    [Fact(DisplayName = "Given valid brand should be created successfully.")]
-    public async Task Create_GivenValidBrand_ShouldCreateSuccessfully()
+    [Fact(DisplayName = "Given valid subcategory should be created successfully.")]
+    public async Task Create_GivenValidSubcategory_ShouldCreateSuccessfully()
     {
         // Arrange 
         if (string.IsNullOrEmpty(_testsFixture.AdminAccessToken))
@@ -116,18 +120,25 @@ public class BrandControllerTests
             await _testsFixture.AuthenticateAsAdminAsync();
         }
 
-        var entity = new BrandFixture().Valid();
+        var category = await _testsFixture.MaliwanDbContext.Categories
+                           .FirstOrDefaultAsync(e => e.Active && !e.DeletedAt.HasValue)
+                       ?? await _testsFixture.GetInsertedNewCategoryAsync();
+        var entity = _testsFixture.EntityFixture.SubcategoryFixture.Valid();
+        entity.IdCategory = category.Id;
         var retry = 3;
-        while (retry > 0 && await _testsFixture.MaliwanDbContext.Brands.AnyAsync(e => 
+        while (retry > 0 && await _testsFixture.MaliwanDbContext.Subcategories.AnyAsync(e =>
+                   e.IdCategory == category.Id &&
                    (e.Name.Trim().ToLower() == entity.Name.Trim().ToLower()
                    || e.Sku.ToUpper() == entity.Sku.ToUpper())
                && !e.DeletedAt.HasValue))
         {
-            entity = new BrandFixture().Valid();
+            entity = _testsFixture.EntityFixture.SubcategoryFixture.Valid();
+            entity.IdCategory = category.Id;
             retry--;
         }
 
-        var request = new CreateBrandCommand(
+        var request = new CreateSubcategoryCommand(
+            entity.IdCategory,
             entity.Name,
             entity.Sku,
             true
@@ -136,26 +147,27 @@ public class BrandControllerTests
         // Act 
         var response = await _testsFixture.Client
             .AddToken(_testsFixture.AdminAccessToken)
-            .PostAsJsonAsync("/Brand", request);
+            .PostAsJsonAsync("/Subcategory", request);
 
         // Assert 
         response.EnsureSuccessStatusCode();
-        var responseObj = await response.DeserializeObject<BaseResponse<BrandModel?>>();
+        var responseObj = await response.DeserializeObject<BaseResponse<SubcategoryModel?>>();
         responseObj.Success.Should().BeTrue();
         responseObj.Errors.Should().HaveCount(0);
     }
 
     [Trait("IntegrationTest", "Controllers")]
-    [Fact(DisplayName = "Given existing valid brand should be updated successfully.")]
-    public async Task Update_GivenExistingValidBrand_ShouldUpdateSuccessfully()
+    [Fact(DisplayName = "Given existing valid subcategory should be updated successfully.")]
+    public async Task Update_GivenExistingValidSubcategory_ShouldUpdateSuccessfully()
     {
         // Arrange 
-        var entity = await _testsFixture.MaliwanDbContext.Brands
+        var entity = await _testsFixture.MaliwanDbContext.Subcategories
                          .FirstOrDefaultAsync(e => !e.DeletedAt.HasValue)
-            ?? await _testsFixture.GetInsertedNewBrandAsync();
+            ?? await _testsFixture.GetInsertedNewSubcategoryAsync();
 
-        var request = new UpdateBrandCommand(
+        var request = new UpdateSubcategoryCommand(
             entity.Id,
+            entity.IdCategory,
             entity.Name,
             entity.Sku,
             !entity.Active);
@@ -168,23 +180,23 @@ public class BrandControllerTests
         // Act 
         var response = await _testsFixture.Client
             .AddToken(_testsFixture.AdminAccessToken)
-            .PutAsJsonAsync("/Brand", request);
+            .PutAsJsonAsync("/Subcategory", request);
 
         // Assert 
         response.EnsureSuccessStatusCode();
-        var responseObj = await response.DeserializeObject<BaseResponse<BrandModel?>>();
+        var responseObj = await response.DeserializeObject<BaseResponse<SubcategoryModel?>>();
         responseObj.Success.Should().BeTrue();
         responseObj.Errors.Should().HaveCount(0);
     }
 
     [Trait("IntegrationTest", "Controllers")]
-    [Fact(DisplayName = "Given existing brand should delete successfully.")]
-    public async Task Delete_GivenExistingBrand_ShouldDeleteSuccessfully()
+    [Fact(DisplayName = "Given existing subcategory should delete successfully.")]
+    public async Task Delete_GivenExistingSubcategory_ShouldDeleteSuccessfully()
     {
         // Arrange 
-        var entity = await _testsFixture.MaliwanDbContext.Brands
+        var entity = await _testsFixture.MaliwanDbContext.Subcategories
                          .FirstOrDefaultAsync(e => !e.DeletedAt.HasValue)
-                     ?? await _testsFixture.GetInsertedNewBrandAsync();
+                     ?? await _testsFixture.GetInsertedNewSubcategoryAsync();
 
         if (string.IsNullOrEmpty(_testsFixture.AdminAccessToken))
         {
@@ -194,7 +206,7 @@ public class BrandControllerTests
         // Act 
         var response = await _testsFixture.Client
             .AddToken(_testsFixture.AdminAccessToken)
-            .DeleteAsync($"/Brand/{entity.Id}");
+            .DeleteAsync($"/Subcategory/{entity.Id}");
 
         // Assert 
         response.EnsureSuccessStatusCode();
