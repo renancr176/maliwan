@@ -54,7 +54,7 @@ public class UpdateProductColorCommandHandler : IRequestHandler<UpdateProductCol
             {
                 await _mediator.Publish(new DomainNotification(
                     nameof(CommonMessages.BrandNotFound),
-                    _commonMessagesLocalizer.GetString(nameof(CommonMessages.BrandNotFound))));
+                    _commonMessagesLocalizer.GetString(nameof(CommonMessages.ProductColorNotFound))));
             }
 
             entity = _mapper.Map(command, entity);

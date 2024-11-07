@@ -237,6 +237,21 @@ public class IntegrationTestsFixture<TStartup> : IDisposable where TStartup : cl
         return entity;
     }
 
+    public async Task<ProductSize> GetInsertedNewProductSizeAsync()
+    {
+        var entity = EntityFixture.ProductSizeFixture.Valid();
+        while (await MaliwanDbContext.ProductSizes.AnyAsync(e =>
+                   (e.Name.Trim().ToLower() == entity.Name.Trim().ToLower() ||
+                    e.Sku.Trim().ToLower() == entity.Sku.Trim().ToLower())
+                   && !e.DeletedAt.HasValue))
+        {
+            entity = EntityFixture.ProductSizeFixture.Valid();
+        }
+        await MaliwanDbContext.ProductSizes.AddAsync(entity);
+        await MaliwanDbContext.SaveChangesAsync();
+        return entity;
+    }
+
     public async Task<Subcategory> GetInsertedNewSubcategoryAsync(Category category = null)
     {
         category = category ?? await MaliwanDbContext.Categories.FirstOrDefaultAsync(e => e.Active && !e.DeletedAt.HasValue)

@@ -3,15 +3,16 @@ using Maliwan.Application.Models.MaliwanContext;
 using Maliwan.Application.Services.Interfaces;
 using Maliwan.Domain.Core.Enums;
 using Maliwan.Domain.Core.Messages.CommonMessages.Notifications;
+using Maliwan.Domain.MaliwanContext.Entities;
 using Maliwan.Domain.MaliwanContext.Interfaces.Repositories;
 using Maliwan.Domain.MaliwanContext.Interfaces.Validators;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
 
-namespace Maliwan.Application.Commands.MaliwanContext.PaymentMethodCommands;
+namespace Maliwan.Application.Commands.MaliwanContext.ProductSizeCommands;
 
-public class UpdatePaymentMethodCommandHandler : IRequestHandler<UpdatePaymentMethodCommand, PaymentMethodModel?>
+public class CreateProductSizeCommandHandler : IRequestHandler<CreateProductSizeCommand, ProductSizeModel?>
 {
     private readonly IMediator _mediator;
     private readonly IMapper _mapper;
@@ -19,24 +20,23 @@ public class UpdatePaymentMethodCommandHandler : IRequestHandler<UpdatePaymentMe
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IUserService _userService;
     private readonly IStringLocalizer<CommonMessages> _commonMessagesLocalizer;
-    private readonly IPaymentMethodRepository _paymentMethodRepository;
-    private readonly IPaymentMethodValidator _paymentMethodValidator;
+    private readonly IProductSizeRepository _productSizeRepository;
+    private readonly IProductSizeValidator _productSizeValidator;
 
-    public UpdatePaymentMethodCommandHandler(IMediator mediator, IMapper mapper,
-        IHttpContextAccessor httpContextAccessor, IUserService userService,
-        IStringLocalizer<CommonMessages> commonMessagesLocalizer, IPaymentMethodRepository paymentMethodRepository,
-        IPaymentMethodValidator paymentMethodValidator)
+    public CreateProductSizeCommandHandler(IMediator mediator, IMapper mapper, IHttpContextAccessor httpContextAccessor,
+        IUserService userService, IStringLocalizer<CommonMessages> commonMessagesLocalizer,
+        IProductSizeRepository productSizeRepository, IProductSizeValidator productSizeValidator)
     {
         _mediator = mediator;
         _mapper = mapper;
         _httpContextAccessor = httpContextAccessor;
         _userService = userService;
         _commonMessagesLocalizer = commonMessagesLocalizer;
-        _paymentMethodRepository = paymentMethodRepository;
-        _paymentMethodValidator = paymentMethodValidator;
+        _productSizeRepository = productSizeRepository;
+        _productSizeValidator = productSizeValidator;
     }
 
-    public async Task<PaymentMethodModel?> Handle(UpdatePaymentMethodCommand command, CancellationToken cancellationToken)
+    public async Task<ProductSizeModel?> Handle(CreateProductSizeCommand command, CancellationToken cancellationToken)
     {
         try
         {
@@ -48,35 +48,26 @@ public class UpdatePaymentMethodCommandHandler : IRequestHandler<UpdatePaymentMe
                 return default;
             }
 
-            var entity = await _paymentMethodRepository.GetByIdAsync(command.Id);
-
-            if (entity == null)
-            {
-                await _mediator.Publish(new DomainNotification(
-                    nameof(CommonMessages.BrandNotFound),
-                    _commonMessagesLocalizer.GetString(nameof(CommonMessages.PaymentMethodNotFound))));
-            }
-
-            entity = _mapper.Map(command, entity);
+            var entity = _mapper.Map<ProductSize>(command);
 
             if (!command.AggregateId.HasValue)
-                await _paymentMethodRepository.UnitOfWork.BeginTransaction();
+                await _productSizeRepository.UnitOfWork.BeginTransaction();
 
-            if (!await _paymentMethodValidator.IsValidAsync(entity))
+            if (!await _productSizeValidator.IsValidAsync(entity))
             {
-                foreach (var error in _paymentMethodValidator.ValidationResult.Errors)
+                foreach (var error in _productSizeValidator.ValidationResult.Errors)
                 {
                     await _mediator.Publish(_mapper.Map<DomainNotification>(error));
                 }
                 return default;
             }
 
-            await _paymentMethodRepository.UpdateAsync(entity);
+            await _productSizeRepository.InsertAsync(entity);
 
             if (!command.AggregateId.HasValue)
-                await _paymentMethodRepository.UnitOfWork.Commit();
+                await _productSizeRepository.UnitOfWork.Commit();
 
-            return _mapper.Map<PaymentMethodModel>(entity);
+            return _mapper.Map<ProductSizeModel>(entity);
         }
         catch (Exception e)
         {

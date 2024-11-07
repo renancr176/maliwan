@@ -14,6 +14,7 @@ public class EntityFixture : IDisposable
     public GenderFixture GenderFixture { get; set; }
     public PaymentMethodFixture PaymentMethodFixture { get; set; }
     public ProductColorFixture ProductColorFixture { get; set; }
+    public ProductSizeFixture ProductSizeFixture { get; set; }
     public SubcategoryFixture SubcategoryFixture { get; set; }
 
     public EntityFixture()
@@ -24,6 +25,7 @@ public class EntityFixture : IDisposable
         GenderFixture = new GenderFixture();
         PaymentMethodFixture = new PaymentMethodFixture();
         ProductColorFixture = new ProductColorFixture();
+        ProductSizeFixture = new ProductSizeFixture();
         SubcategoryFixture = new SubcategoryFixture();
     }
 
@@ -34,6 +36,7 @@ public class EntityFixture : IDisposable
         GenderFixture.Dispose();
         PaymentMethodFixture.Dispose();
         ProductColorFixture.Dispose();
+        ProductSizeFixture.Dispose();
         SubcategoryFixture.Dispose();
     }
 }

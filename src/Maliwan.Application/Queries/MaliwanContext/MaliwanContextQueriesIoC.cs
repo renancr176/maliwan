@@ -12,6 +12,7 @@ public static class MaliwanContextQueriesIoC
         services.AddScoped<IGenderQuery, GenderQuery>();
         services.AddScoped<IPaymentMethodQuery, PaymentMethodQuery>();
         services.AddScoped<IProductColorQuery, ProductColorQuery>();
+        services.AddScoped<IProductSizeQuery, ProductSizeQuery>();
         services.AddScoped<ISubcategoryQuery, SubcategoryQuery>();
     }
 }
