@@ -207,6 +207,20 @@ public class IntegrationTestsFixture<TStartup> : IDisposable where TStartup : cl
         await MaliwanDbContext.SaveChangesAsync();
         return entity;
     }
+    
+    public async Task<PaymentMethod> GetInsertedNewPaymentMethodAsync()
+    {
+        var entity = EntityFixture.PaymentMethodFixture.Valid();
+        while (await MaliwanDbContext.PaymentMethods.AnyAsync(e =>
+                   e.Name.Trim().ToLower() == entity.Name.Trim().ToLower()
+                   && !e.DeletedAt.HasValue))
+        {
+            entity = EntityFixture.PaymentMethodFixture.Valid();
+        }
+        await MaliwanDbContext.PaymentMethods.AddAsync(entity);
+        await MaliwanDbContext.SaveChangesAsync();
+        return entity;
+    }
 
     public async Task<Subcategory> GetInsertedNewSubcategoryAsync(Category category = null)
     {

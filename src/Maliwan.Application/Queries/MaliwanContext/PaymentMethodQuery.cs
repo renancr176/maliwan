@@ -1,11 +1,9 @@
-﻿using System.Linq.Expressions;
-using AutoMapper;
+﻿using AutoMapper;
 using Maliwan.Application.Models.MaliwanContext;
 using Maliwan.Application.Models.MaliwanContext.Queries.Requests;
 using Maliwan.Application.Queries.MaliwanContext.Interfaces;
 using Maliwan.Application.Services.Interfaces;
 using Maliwan.Domain.Core.Enums;
-using Maliwan.Domain.Core.Extensions;
 using Maliwan.Domain.Core.Messages.CommonMessages.Notifications;
 using Maliwan.Domain.Core.Responses;
 using Maliwan.Domain.MaliwanContext.Entities;
@@ -13,10 +11,12 @@ using Maliwan.Domain.MaliwanContext.Interfaces.Repositories;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
+using System.Linq.Expressions;
+using Maliwan.Domain.Core.Extensions;
 
 namespace Maliwan.Application.Queries.MaliwanContext;
 
-public class BrandQuery : IBrandQuery
+public class PaymentMethodQuery : IPaymentMethodQuery
 {
     private readonly IMediator _mediator;
     private readonly IMapper _mapper;
@@ -24,28 +24,28 @@ public class BrandQuery : IBrandQuery
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IStringLocalizer<CommonMessages> _commonMessagesLocalizer;
     private readonly IUserService _userService;
-    private readonly IBrandRepository _brandRepository;
+    private readonly IPaymentMethodRepository _paymentMethodRepository;
 
-    public BrandQuery(IMediator mediator, IMapper mapper, IHttpContextAccessor httpContextAccessor,
+    public PaymentMethodQuery(IMediator mediator, IMapper mapper, IHttpContextAccessor httpContextAccessor,
         IStringLocalizer<CommonMessages> commonMessagesLocalizer, IUserService userService,
-        IBrandRepository brandRepository)
+        IPaymentMethodRepository paymentMethodRepository)
     {
         _mediator = mediator;
         _mapper = mapper;
         _httpContextAccessor = httpContextAccessor;
         _commonMessagesLocalizer = commonMessagesLocalizer;
         _userService = userService;
-        _brandRepository = brandRepository;
+        _paymentMethodRepository = paymentMethodRepository;
     }
 
     private IEnumerable<string> Includes = null;
 
-    public async Task<BrandModel?> GetByIdAsync(int id)
+    public async Task<PaymentMethodModel?> GetByIdAsync(int id)
     {
         try
         {
             var isAdmin = await _userService.CurrentUserHasRole(RoleEnum.Admin);
-            return _mapper.Map<BrandModel>(await _brandRepository.FirstOrDefaultAsync(e => e.Id == id && (isAdmin || e.Active), Includes));
+            return _mapper.Map<PaymentMethodModel>(await _paymentMethodRepository.FirstOrDefaultAsync(e => e.Id == id && (isAdmin || e.Active), Includes));
         }
         catch (Exception e)
         {
@@ -57,12 +57,12 @@ public class BrandQuery : IBrandQuery
         return default;
     }
 
-    public async Task<IEnumerable<BrandModel>?> GetAllAsync()
+    public async Task<IEnumerable<PaymentMethodModel>?> GetAllAsync()
     {
         try
         {
             var isAdmin = await _userService.CurrentUserHasRole(RoleEnum.Admin);
-            return _mapper.Map<IEnumerable<BrandModel>>(await _brandRepository.FindAsync(e => isAdmin || e.Active, Includes));
+            return _mapper.Map<IEnumerable<PaymentMethodModel>>(await _paymentMethodRepository.FindAsync(e => isAdmin || e.Active, Includes));
         }
         catch (Exception e)
         {
@@ -74,7 +74,7 @@ public class BrandQuery : IBrandQuery
         return default;
     }
 
-    public async Task<PagedResponse<BrandModel>?> SearchAsync(BrandSearchRequest request)
+    public async Task<PagedResponse<PaymentMethodModel>?> SearchAsync(PaymentMethodSearchRequest request)
     {
         try
         {
@@ -82,11 +82,11 @@ public class BrandQuery : IBrandQuery
 
             #region Be careful when changing the permissions check
 
-            Expression<Func<Brand, bool>> permitions = e => isAdmin || e.Active;
+            Expression<Func<PaymentMethod, bool>> permitions = e => isAdmin || e.Active;
 
             #endregion
 
-            Expression<Func<Brand, bool>> filters = null;
+            Expression<Func<PaymentMethod, bool>> filters = null;
 
             switch (request.ConditionType)
             {
@@ -106,12 +106,12 @@ public class BrandQuery : IBrandQuery
 
             var combined = permitions.AndAlso(filters);
 
-            return _mapper.Map<PagedResponse<BrandModel>>(
-                await _brandRepository.GetPagedAsync(
-                    request, 
+            return _mapper.Map<PagedResponse<PaymentMethodModel>>(
+                await _paymentMethodRepository.GetPagedAsync(
+                    request,
                     Includes,
                     combined,
-                    new Dictionary<Expression<Func<Brand, object>>, OrderByEnum>()
+                    new Dictionary<Expression<Func<PaymentMethod, object>>, OrderByEnum>()
                     {
                         {e => e.Name, OrderByEnum.Ascending}
                     }));
