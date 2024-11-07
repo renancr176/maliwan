@@ -1,5 +1,6 @@
 ﻿using Maliwan.Application.Commands.MaliwanContext.BrandCommands;
 using Maliwan.Application.Commands.MaliwanContext.CategoryCommands;
+using Maliwan.Application.Commands.MaliwanContext.CustomerCommands;
 using Maliwan.Application.Commands.MaliwanContext.GenderCommands;
 using Maliwan.Application.Commands.MaliwanContext.PaymentMethodCommands;
 using Maliwan.Application.Commands.MaliwanContext.ProductColorCommands;
@@ -28,6 +29,14 @@ public static class MaliwanContextCommandsIoC
         services.AddScoped<IRequestHandler<CreateCategoryCommand, CategoryModel?>, CreateCategoryCommandHandler>();
         services.AddScoped<IRequestHandler<UpdateCategoryCommand, CategoryModel?>, UpdateCategoryCommandHandler>();
         services.AddScoped<IRequestHandler<DeleteCategoryCommand, bool>, DeleteCategoryCommandHandler>();
+
+        #endregion
+
+        #region Customer
+
+        services.AddScoped<IRequestHandler<CreateCustomerCommand, CustomerModel?>, CreateCustomerCommandHandler>();
+        services.AddScoped<IRequestHandler<UpdateCustomerCommand, CustomerModel?>, UpdateCustomerCommandHandler>();
+        services.AddScoped<IRequestHandler<DeleteCustomerCommand, bool>, DeleteCustomerCommandHandler>();
 
         #endregion
 

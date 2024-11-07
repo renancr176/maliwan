@@ -30,6 +30,7 @@ public class CommonMessages
 
     public const string BrandNotFound = "Brand not found.";
     public const string CategoryNotFound = "Category not found.";
+    public const string CustomerNotFound = "Customer not found.";
     public const string GenderNotFound = "Gender not found.";
     public const string PaymentMethodNotFound = "Payment method not found.";
     public const string ProductColorNotFound = "Product color not found.";

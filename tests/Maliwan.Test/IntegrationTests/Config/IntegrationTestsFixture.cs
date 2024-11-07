@@ -12,6 +12,7 @@ using Maliwan.Test.Extensions;
 using Maliwan.Test.Fixtures;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Castle.Core.Resource;
 
 namespace Maliwan.Test.IntegrationTests.Config;
 
@@ -189,6 +190,20 @@ public class IntegrationTestsFixture<TStartup> : IDisposable where TStartup : cl
             entity = EntityFixture.CategoryFixture.Valid();
         }
         await MaliwanDbContext.Categories.AddAsync(entity);
+        await MaliwanDbContext.SaveChangesAsync();
+        return entity;
+    }
+
+    public async Task<Customer> GetInsertedNewCustomerAsync()
+    {
+        var entity = EntityFixture.CustomerFixture.Valid();
+        while (await MaliwanDbContext.Customers.AnyAsync(e =>
+                   e.Document.Trim().ToLower() == entity.Document.Trim().ToLower()
+                   && !e.DeletedAt.HasValue))
+        {
+            entity = EntityFixture.CustomerFixture.Valid();
+        }
+        await MaliwanDbContext.Customers.AddAsync(entity);
         await MaliwanDbContext.SaveChangesAsync();
         return entity;
     }
