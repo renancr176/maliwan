@@ -4,6 +4,7 @@ using Maliwan.Application.Commands.MaliwanContext.BrandCommands;
 using Maliwan.Application.Commands.MaliwanContext.CategoryCommands;
 using Maliwan.Application.Commands.MaliwanContext.GenderCommands;
 using Maliwan.Application.Commands.MaliwanContext.PaymentMethodCommands;
+using Maliwan.Application.Commands.MaliwanContext.ProductColorCommands;
 using Maliwan.Application.Commands.MaliwanContext.SubcategoryCommands;
 using Maliwan.Domain.IdentityContext.Entities;
 using Maliwan.Domain.MaliwanContext.Entities;
@@ -47,6 +48,13 @@ public class CommandToEntityMappingProfile : Profile
 
         CreateMap<CreatePaymentMethodCommand, PaymentMethod>();
         CreateMap<UpdatePaymentMethodCommand, PaymentMethod>();
+
+        #endregion
+
+        #region ProductColor
+
+        CreateMap<CreateProductColorCommand, ProductColor>();
+        CreateMap<UpdateProductColorCommand, ProductColor>();
 
         #endregion
 

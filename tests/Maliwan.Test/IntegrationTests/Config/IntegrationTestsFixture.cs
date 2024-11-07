@@ -221,6 +221,21 @@ public class IntegrationTestsFixture<TStartup> : IDisposable where TStartup : cl
         await MaliwanDbContext.SaveChangesAsync();
         return entity;
     }
+    
+    public async Task<ProductColor> GetInsertedNewProductColorAsync()
+    {
+        var entity = EntityFixture.ProductColorFixture.Valid();
+        while (await MaliwanDbContext.ProductColors.AnyAsync(e =>
+                   (e.Name.Trim().ToLower() == entity.Name.Trim().ToLower() ||
+                    e.Sku.Trim().ToLower() == entity.Sku.Trim().ToLower())
+                   && !e.DeletedAt.HasValue))
+        {
+            entity = EntityFixture.ProductColorFixture.Valid();
+        }
+        await MaliwanDbContext.ProductColors.AddAsync(entity);
+        await MaliwanDbContext.SaveChangesAsync();
+        return entity;
+    }
 
     public async Task<Subcategory> GetInsertedNewSubcategoryAsync(Category category = null)
     {
