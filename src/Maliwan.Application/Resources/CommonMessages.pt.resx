@@ -132,6 +132,9 @@
   <data name="EmailPasswordResetSubject" xml:space="preserve">
     <value>Alteração de senha.</value>
   </data>
+  <data name="GenderNotFound" xml:space="preserve">
+    <value>Gênero não encontrado.</value>
+  </data>
   <data name="InternalServerError" xml:space="preserve">
     <value>Ocorreu um erro interno do servidor, por favor tente novamente mais tarde.</value>
   </data>
@@ -173,6 +176,9 @@
   </data>
   <data name="RelationshipNotFound" xml:space="preserve">
     <value>O relacionamento não foi encontrado.</value>
+  </data>
+  <data name="SubcategoryNotFound" xml:space="preserve">
+    <value>Subcategoria não encontrada.</value>
   </data>
   <data name="UnableSendMail" xml:space="preserve">
     <value>Não é possível enviar e-mail.</value>

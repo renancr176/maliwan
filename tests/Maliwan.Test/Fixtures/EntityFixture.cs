@@ -11,6 +11,7 @@ public class EntityFixture : IDisposable
     public Faker Faker { get; private set; }
     public BrandFixture BrandFixture { get; set; }
     public CategoryFixture CategoryFixture { get; set; }
+    public GenderFixture GenderFixture { get; set; }
     public SubcategoryFixture SubcategoryFixture { get; set; }
 
     public EntityFixture()
@@ -18,6 +19,7 @@ public class EntityFixture : IDisposable
         Faker = new Faker("pt_BR");
         BrandFixture = new BrandFixture();
         CategoryFixture = new CategoryFixture();
+        GenderFixture = new GenderFixture();
         SubcategoryFixture = new SubcategoryFixture();
     }
 
@@ -25,5 +27,7 @@ public class EntityFixture : IDisposable
     {
         BrandFixture.Dispose();
         CategoryFixture.Dispose();
+        GenderFixture.Dispose();
+        SubcategoryFixture.Dispose();
     }
 }

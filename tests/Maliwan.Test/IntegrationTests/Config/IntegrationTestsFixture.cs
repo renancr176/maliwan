@@ -193,6 +193,21 @@ public class IntegrationTestsFixture<TStartup> : IDisposable where TStartup : cl
         return entity;
     }
 
+    public async Task<Gender> GetInsertedNewGenderAsync()
+    {
+        var entity = EntityFixture.GenderFixture.Valid();
+        while (await MaliwanDbContext.Genders.AnyAsync(e =>
+                   (e.Name.Trim().ToLower() == entity.Name.Trim().ToLower()
+                    || e.Sku.Trim().ToLower() == entity.Sku.Trim().ToLower())
+                   && !e.DeletedAt.HasValue))
+        {
+            entity = EntityFixture.GenderFixture.Valid();
+        }
+        await MaliwanDbContext.Genders.AddAsync(entity);
+        await MaliwanDbContext.SaveChangesAsync();
+        return entity;
+    }
+
     public async Task<Subcategory> GetInsertedNewSubcategoryAsync(Category category = null)
     {
         category = category ?? await MaliwanDbContext.Categories.FirstOrDefaultAsync(e => e.Active && !e.DeletedAt.HasValue)

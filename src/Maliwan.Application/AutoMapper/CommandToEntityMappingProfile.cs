@@ -2,6 +2,7 @@
 using Maliwan.Application.Commands.IdentityContext.UserCommands;
 using Maliwan.Application.Commands.MaliwanContext.BrandCommands;
 using Maliwan.Application.Commands.MaliwanContext.CategoryCommands;
+using Maliwan.Application.Commands.MaliwanContext.GenderCommands;
 using Maliwan.Application.Commands.MaliwanContext.SubcategoryCommands;
 using Maliwan.Domain.IdentityContext.Entities;
 using Maliwan.Domain.MaliwanContext.Entities;
@@ -31,6 +32,13 @@ public class CommandToEntityMappingProfile : Profile
 
         CreateMap<CreateCategoryCommand, Category>();
         CreateMap<UpdateCategoryCommand, Category>();
+
+        #endregion
+
+        #region Gender
+
+        CreateMap<CreateGenderCommand, Gender>();
+        CreateMap<UpdateGenderCommand, Gender>();
 
         #endregion
 

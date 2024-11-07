@@ -5,14 +5,13 @@ using Maliwan.Domain.Core.Enums;
 using Maliwan.Domain.Core.Messages.CommonMessages.Notifications;
 using Maliwan.Domain.MaliwanContext.Interfaces.Repositories;
 using Maliwan.Domain.MaliwanContext.Interfaces.Validators;
-using Maliwan.Domain.MaliwanContext.Validators;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
 
-namespace Maliwan.Application.Commands.MaliwanContext.SubcategoryCommands;
+namespace Maliwan.Application.Commands.MaliwanContext.GenderCommands;
 
-public class UpdateSubcategoryCommandHandler : IRequestHandler<UpdateSubcategoryCommand, SubcategoryModel?>
+public class UpdateGenderCommandHandler : IRequestHandler<UpdateGenderCommand, GenderModel?>
 {
     private readonly IMediator _mediator;
     private readonly IMapper _mapper;
@@ -20,23 +19,23 @@ public class UpdateSubcategoryCommandHandler : IRequestHandler<UpdateSubcategory
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IUserService _userService;
     private readonly IStringLocalizer<CommonMessages> _commonMessagesLocalizer;
-    private readonly ISubcategoryRepository _subcategoryRepository;
-    private readonly ISubcategoryValidator _subcategoryValidator;
+    private readonly IGenderRepository _genderRepository;
+    private readonly IGenderValidator _genderValidator;
 
-    public UpdateSubcategoryCommandHandler(IMediator mediator, IMapper mapper, IHttpContextAccessor httpContextAccessor,
+    public UpdateGenderCommandHandler(IMediator mediator, IMapper mapper, IHttpContextAccessor httpContextAccessor,
         IUserService userService, IStringLocalizer<CommonMessages> commonMessagesLocalizer,
-        ISubcategoryRepository subcategoryRepository, ISubcategoryValidator subcategoryValidator)
+        IGenderRepository genderRepository, IGenderValidator genderValidator)
     {
         _mediator = mediator;
         _mapper = mapper;
         _httpContextAccessor = httpContextAccessor;
         _userService = userService;
         _commonMessagesLocalizer = commonMessagesLocalizer;
-        _subcategoryRepository = subcategoryRepository;
-        _subcategoryValidator = subcategoryValidator;
+        _genderRepository = genderRepository;
+        _genderValidator = genderValidator;
     }
 
-    public async Task<SubcategoryModel?> Handle(UpdateSubcategoryCommand command, CancellationToken cancellationToken)
+    public async Task<GenderModel?> Handle(UpdateGenderCommand command, CancellationToken cancellationToken)
     {
         try
         {
@@ -48,35 +47,35 @@ public class UpdateSubcategoryCommandHandler : IRequestHandler<UpdateSubcategory
                 return default;
             }
 
-            var entity = await _subcategoryRepository.GetByIdAsync(command.Id);
+            var entity = await _genderRepository.GetByIdAsync(command.Id);
 
             if (entity == null)
             {
                 await _mediator.Publish(new DomainNotification(
                     nameof(CommonMessages.CategoryNotFound),
-                    _commonMessagesLocalizer.GetString(nameof(CommonMessages.SubcategoryNotFound))));
+                    _commonMessagesLocalizer.GetString(nameof(CommonMessages.GenderNotFound))));
             }
 
             entity = _mapper.Map(command, entity);
 
             if (!command.AggregateId.HasValue)
-                await _subcategoryRepository.UnitOfWork.BeginTransaction();
+                await _genderRepository.UnitOfWork.BeginTransaction();
 
-            if (!await _subcategoryValidator.IsValidAsync(entity))
+            if (!await _genderValidator.IsValidAsync(entity))
             {
-                foreach (var error in _subcategoryValidator.ValidationResult.Errors)
+                foreach (var error in _genderValidator.ValidationResult.Errors)
                 {
                     await _mediator.Publish(_mapper.Map<DomainNotification>(error));
                 }
                 return default;
             }
 
-            await _subcategoryRepository.UpdateAsync(entity);
+            await _genderRepository.UpdateAsync(entity);
 
             if (!command.AggregateId.HasValue)
-                await _subcategoryRepository.UnitOfWork.Commit();
+                await _genderRepository.UnitOfWork.Commit();
 
-            return _mapper.Map<SubcategoryModel>(entity);
+            return _mapper.Map<GenderModel>(entity);
         }
         catch (Exception e)
         {

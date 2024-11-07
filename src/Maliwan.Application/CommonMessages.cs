@@ -30,6 +30,8 @@ public class CommonMessages
 
     public const string BrandNotFound = "Brand not found.";
     public const string CategoryNotFound = "Category not found.";
+    public const string GenderNotFound = "Gender not found.";
+    public const string SubcategoryNotFound = "Subcategory not found.";
 
     #endregion
 }

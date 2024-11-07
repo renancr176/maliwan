@@ -9,6 +9,7 @@ public static class MaliwanContextQueriesIoC
     {
         services.AddScoped<IBrandQuery, BrandQuery>();
         services.AddScoped<ICategoryQuery, CategoryQuery>();
+        services.AddScoped<IGenderQuery, GenderQuery>();
         services.AddScoped<ISubcategoryQuery, SubcategoryQuery>();
     }
 }

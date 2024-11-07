@@ -1,5 +1,6 @@
 ﻿using Maliwan.Application.Commands.MaliwanContext.BrandCommands;
 using Maliwan.Application.Commands.MaliwanContext.CategoryCommands;
+using Maliwan.Application.Commands.MaliwanContext.GenderCommands;
 using Maliwan.Application.Commands.MaliwanContext.SubcategoryCommands;
 using Maliwan.Application.Models.MaliwanContext;
 using MediatR;
@@ -24,6 +25,14 @@ public static class MaliwanContextCommandsIoC
         services.AddScoped<IRequestHandler<CreateCategoryCommand, CategoryModel?>, CreateCategoryCommandHandler>();
         services.AddScoped<IRequestHandler<UpdateCategoryCommand, CategoryModel?>, UpdateCategoryCommandHandler>();
         services.AddScoped<IRequestHandler<DeleteCategoryCommand, bool>, DeleteCategoryCommandHandler>();
+
+        #endregion
+
+        #region Gender
+
+        services.AddScoped<IRequestHandler<CreateGenderCommand, GenderModel?>, CreateGenderCommandHandler>();
+        services.AddScoped<IRequestHandler<UpdateGenderCommand, GenderModel?>, UpdateGenderCommandHandler>();
+        services.AddScoped<IRequestHandler<DeleteGenderCommand, bool>, DeleteGenderCommandHandler>();
 
         #endregion
 
