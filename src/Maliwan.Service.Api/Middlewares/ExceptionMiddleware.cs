@@ -2,7 +2,6 @@
 using Maliwan.Service.Api.Models.Responses;
 using Maliwan.Service.Api.Models;
 using Newtonsoft.Json;
-using Serilog;
 using System.Net;
 using Serilog.Context;
 

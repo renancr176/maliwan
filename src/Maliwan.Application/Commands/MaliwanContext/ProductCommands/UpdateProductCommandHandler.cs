@@ -9,9 +9,9 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
 
-namespace Maliwan.Application.Commands.MaliwanContext.SubcategoryCommands;
+namespace Maliwan.Application.Commands.MaliwanContext.ProductCommands;
 
-public class UpdateSubcategoryCommandHandler : IRequestHandler<UpdateSubcategoryCommand, SubcategoryModel?>
+public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, ProductModel?>
 {
     private readonly IMediator _mediator;
     private readonly IMapper _mapper;
@@ -19,23 +19,23 @@ public class UpdateSubcategoryCommandHandler : IRequestHandler<UpdateSubcategory
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IUserService _userService;
     private readonly IStringLocalizer<CommonMessages> _commonMessagesLocalizer;
-    private readonly ISubcategoryRepository _subcategoryRepository;
-    private readonly ISubcategoryValidator _subcategoryValidator;
+    private readonly IProductRepository _productRepository;
+    private readonly IProductValidator _productValidator;
 
-    public UpdateSubcategoryCommandHandler(IMediator mediator, IMapper mapper, IHttpContextAccessor httpContextAccessor,
+    public UpdateProductCommandHandler(IMediator mediator, IMapper mapper, IHttpContextAccessor httpContextAccessor,
         IUserService userService, IStringLocalizer<CommonMessages> commonMessagesLocalizer,
-        ISubcategoryRepository subcategoryRepository, ISubcategoryValidator subcategoryValidator)
+        IProductRepository productRepository, IProductValidator productValidator)
     {
         _mediator = mediator;
         _mapper = mapper;
         _httpContextAccessor = httpContextAccessor;
         _userService = userService;
         _commonMessagesLocalizer = commonMessagesLocalizer;
-        _subcategoryRepository = subcategoryRepository;
-        _subcategoryValidator = subcategoryValidator;
+        _productRepository = productRepository;
+        _productValidator = productValidator;
     }
 
-    public async Task<SubcategoryModel?> Handle(UpdateSubcategoryCommand command, CancellationToken cancellationToken)
+    public async Task<ProductModel?> Handle(UpdateProductCommand command, CancellationToken cancellationToken)
     {
         try
         {
@@ -47,35 +47,35 @@ public class UpdateSubcategoryCommandHandler : IRequestHandler<UpdateSubcategory
                 return default;
             }
 
-            var entity = await _subcategoryRepository.GetByIdAsync(command.Id);
+            var entity = await _productRepository.GetByIdAsync(command.Id);
 
             if (entity == null)
             {
                 await _mediator.Publish(new DomainNotification(
-                    nameof(CommonMessages.CategoryNotFound),
-                    _commonMessagesLocalizer.GetString(nameof(CommonMessages.SubcategoryNotFound))));
+                    nameof(CommonMessages.BrandNotFound),
+                    _commonMessagesLocalizer.GetString(nameof(CommonMessages.ProductNotFound))));
             }
 
             entity = _mapper.Map(command, entity);
 
             if (!command.AggregateId.HasValue)
-                await _subcategoryRepository.UnitOfWork.BeginTransaction();
+                await _productRepository.UnitOfWork.BeginTransaction();
 
-            if (!await _subcategoryValidator.IsValidAsync(entity))
+            if (!await _productValidator.IsValidAsync(entity))
             {
-                foreach (var error in _subcategoryValidator.ValidationResult.Errors)
+                foreach (var error in _productValidator.ValidationResult.Errors)
                 {
                     await _mediator.Publish(_mapper.Map<DomainNotification>(error));
                 }
                 return default;
             }
 
-            await _subcategoryRepository.UpdateAsync(entity);
+            await _productRepository.UpdateAsync(entity);
 
             if (!command.AggregateId.HasValue)
-                await _subcategoryRepository.UnitOfWork.Commit();
+                await _productRepository.UnitOfWork.Commit();
 
-            return _mapper.Map<SubcategoryModel>(entity);
+            return _mapper.Map<ProductModel>(entity);
         }
         catch (Exception e)
         {

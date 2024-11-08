@@ -4,6 +4,7 @@ using Maliwan.Application.Commands.MaliwanContext.CustomerCommands;
 using Maliwan.Application.Commands.MaliwanContext.GenderCommands;
 using Maliwan.Application.Commands.MaliwanContext.PaymentMethodCommands;
 using Maliwan.Application.Commands.MaliwanContext.ProductColorCommands;
+using Maliwan.Application.Commands.MaliwanContext.ProductCommands;
 using Maliwan.Application.Commands.MaliwanContext.ProductSizeCommands;
 using Maliwan.Application.Commands.MaliwanContext.SubcategoryCommands;
 using Maliwan.Application.Models.MaliwanContext;
@@ -57,6 +58,14 @@ public static class MaliwanContextCommandsIoC
             .AddScoped<IRequestHandler<UpdatePaymentMethodCommand, PaymentMethodModel?>,
                 UpdatePaymentMethodCommandHandler>();
         services.AddScoped<IRequestHandler<DeletePaymentMethodCommand, bool>, DeletePaymentMethodCommandHandler>();
+
+        #endregion
+
+        #region Product
+
+        services.AddScoped<IRequestHandler<CreateProductCommand, ProductModel?>, CreateProductCommandHandler>();
+        services.AddScoped<IRequestHandler<UpdateProductCommand, ProductModel?>, UpdateProductCommandHandler>();
+        services.AddScoped<IRequestHandler<DeleteProductCommand, bool>, DeleteProductCommandHandler>();
 
         #endregion
 

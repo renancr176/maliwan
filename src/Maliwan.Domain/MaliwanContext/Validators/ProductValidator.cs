@@ -165,8 +165,10 @@ public class ProductValidator : EntityValidator<Product>, IProductValidator
 
     private async Task<decimal> GetStockMaxPurchasePriceAsync(Product entity)
     {
-        var stocks = await _stockRepository.FindAsync(e => e.IdProduct == entity.Id && e.CurrentQuantity > 0,
+        var stocks = await _stockRepository.FindAsync(e => e.IdProduct == entity.Id,
             new[] { nameof(Stock.OrderItems) });
-        return (stocks?.Max(e => e.PurchasePrice) ?? 0M);
+        return (stocks.Any(e => e.CurrentQuantity > 0) 
+            ? stocks.Where(e => e.CurrentQuantity > 0).Max(e => e.PurchasePrice) 
+            : 0M);
     }
 }

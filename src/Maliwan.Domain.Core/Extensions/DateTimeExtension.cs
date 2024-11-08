@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-
-namespace Maliwan.Domain.Core.Extensions;
+﻿namespace Maliwan.Domain.Core.Extensions;
 
 public static class DateTimeExtension
 {

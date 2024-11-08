@@ -66,7 +66,7 @@ public class SubcategoryControllerTests
 
         if (!await _testsFixture.MaliwanDbContext.Subcategories.AnyAsync(e => !e.Active && !e.DeletedAt.HasValue))
         {
-            entity = new EntityFixture().SubcategoryFixture.Valid();
+            entity = _testsFixture.EntityFixture.SubcategoryFixture.Valid();
             entity.IdCategory = category.Id;
             entity.Active = false;
             await _testsFixture.MaliwanDbContext.Subcategories.AddAsync(entity);

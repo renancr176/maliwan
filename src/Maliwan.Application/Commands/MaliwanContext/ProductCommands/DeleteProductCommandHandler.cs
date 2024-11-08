@@ -6,29 +6,29 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
 
-namespace Maliwan.Application.Commands.MaliwanContext.SubcategoryCommands;
+namespace Maliwan.Application.Commands.MaliwanContext.ProductCommands;
 
-public class DeleteSubcategoryCommandHandler : IRequestHandler<DeleteSubcategoryCommand, bool>
+public class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand, bool>
 {
     private readonly IMediator _mediator;
     //private readonly ILog _log;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IUserService _userService;
     private readonly IStringLocalizer<CommonMessages> _commonMessagesLocalizer;
-    private readonly ISubcategoryRepository _subcategoryRepository;
+    private readonly IProductRepository _productRepository;
 
-    public DeleteSubcategoryCommandHandler(IMediator mediator, IHttpContextAccessor httpContextAccessor,
+    public DeleteProductCommandHandler(IMediator mediator, IHttpContextAccessor httpContextAccessor,
         IUserService userService, IStringLocalizer<CommonMessages> commonMessagesLocalizer,
-        ISubcategoryRepository subcategoryRepository)
+        IProductRepository productRepository)
     {
         _mediator = mediator;
         _httpContextAccessor = httpContextAccessor;
         _userService = userService;
         _commonMessagesLocalizer = commonMessagesLocalizer;
-        _subcategoryRepository = subcategoryRepository;
+        _productRepository = productRepository;
     }
 
-    public async Task<bool> Handle(DeleteSubcategoryCommand command, CancellationToken cancellationToken)
+    public async Task<bool> Handle(DeleteProductCommand command, CancellationToken cancellationToken)
     {
         try
         {
@@ -40,7 +40,7 @@ public class DeleteSubcategoryCommandHandler : IRequestHandler<DeleteSubcategory
                 return default;
             }
 
-            var entity = await _subcategoryRepository.GetByIdAsync(command.Id);
+            var entity = await _productRepository.GetByIdAsync(command.Id);
 
             if (entity == null)
             {
@@ -48,12 +48,12 @@ public class DeleteSubcategoryCommandHandler : IRequestHandler<DeleteSubcategory
             }
 
             if (!command.AggregateId.HasValue)
-                await _subcategoryRepository.UnitOfWork.BeginTransaction();
+                await _productRepository.UnitOfWork.BeginTransaction();
 
-            await _subcategoryRepository.DeleteAsync(command.Id);
+            await _productRepository.DeleteAsync(command.Id);
 
             if (!command.AggregateId.HasValue)
-                await _subcategoryRepository.UnitOfWork.Commit();
+                await _productRepository.UnitOfWork.Commit();
 
             return true;
         }

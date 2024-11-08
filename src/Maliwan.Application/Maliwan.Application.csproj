@@ -23,6 +23,7 @@
   <ItemGroup>
     <Folder Include="AutoMapper\" />
     <Folder Include="Commands\IdentityContext\UserCommands\" />
+    <Folder Include="Commands\MaliwanContext\ProductCommands\" />
     <Folder Include="Models\IdentityContext\Queries\" />
     <Folder Include="Models\IdentityContext\Responses\" />
     <Folder Include="Events\" />

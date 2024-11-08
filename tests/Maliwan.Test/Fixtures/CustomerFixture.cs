@@ -1,6 +1,5 @@
 ﻿using Bogus;
 using Bogus.Extensions.Brazil;
-using Bogus.Extensions.Romania;
 using Maliwan.Domain.MaliwanContext.Entities;
 using Maliwan.Domain.MaliwanContext.Enums;
 

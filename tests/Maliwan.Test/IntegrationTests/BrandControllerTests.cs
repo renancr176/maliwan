@@ -116,7 +116,7 @@ public class BrandControllerTests
             await _testsFixture.AuthenticateAsAdminAsync();
         }
 
-        var entity = new BrandFixture().Valid();
+        var entity = _testsFixture.EntityFixture.BrandFixture.Valid();
         var retry = 3;
         while (retry > 0 && await _testsFixture.MaliwanDbContext.Brands.AnyAsync(e => 
                    (e.Name.Trim().ToLower() == entity.Name.Trim().ToLower()

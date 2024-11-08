@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Maliwan.Application.Services.Interfaces;
+﻿using Maliwan.Application.Services.Interfaces;
 using Maliwan.Domain.Core.Enums;
 using Maliwan.Domain.Core.Messages.CommonMessages.Notifications;
 using Maliwan.Domain.MaliwanContext.Interfaces.Repositories;

@@ -1,7 +1,6 @@
 ﻿using Maliwan.Application.Commands.MaliwanContext.ProductColorCommands;
 using Maliwan.Application.Models.MaliwanContext.Queries.Requests;
 using Maliwan.Application.Models.MaliwanContext;
-using Maliwan.Application.Queries.MaliwanContext;
 using Maliwan.Application.Queries.MaliwanContext.Interfaces;
 using Maliwan.Domain.Core.Messages.CommonMessages.Notifications;
 using Maliwan.Domain.Core.Responses;

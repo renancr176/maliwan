@@ -12,7 +12,6 @@ using Maliwan.Test.Extensions;
 using Maliwan.Test.Fixtures;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Castle.Core.Resource;
 
 namespace Maliwan.Test.IntegrationTests.Config;
 
@@ -233,6 +232,40 @@ public class IntegrationTestsFixture<TStartup> : IDisposable where TStartup : cl
             entity = EntityFixture.PaymentMethodFixture.Valid();
         }
         await MaliwanDbContext.PaymentMethods.AddAsync(entity);
+        await MaliwanDbContext.SaveChangesAsync();
+        return entity;
+    }
+
+    public async Task<Product> GetNewProductAsync()
+    {
+        var entity = EntityFixture.ProductFixture.Valid();
+        while (await MaliwanDbContext.Products.AnyAsync(e =>
+                   e.Name.Trim().ToLower() == entity.Name.Trim().ToLower()
+                   && !e.DeletedAt.HasValue))
+        {
+            entity = EntityFixture.ProductFixture.Valid();
+        }
+
+        var brand = await MaliwanDbContext.Brands.FirstOrDefaultAsync(e => e.Active && !e.DeletedAt.HasValue) ??
+                    await GetInsertedNewBrandAsync();
+        var subcategory =
+            await MaliwanDbContext.Subcategories.FirstOrDefaultAsync(e =>
+                e.Active && e.Category.Active && !e.DeletedAt.HasValue && !e.Category.DeletedAt.HasValue) ??
+            await GetInsertedNewSubcategoryAsync();
+        var gender = EntityFixture.Faker.Random.Bool()
+            ? (await MaliwanDbContext.Genders.FirstOrDefaultAsync(e => !e.DeletedAt.HasValue) ?? await GetInsertedNewGenderAsync())
+            : null;
+
+        entity.IdBrand = brand.Id;
+        entity.IdSubcategory = subcategory.Id;
+        entity.IdGender = gender?.Id;
+        return entity;
+    }
+
+    public async Task<Product> GetInsertedNewProductAsync()
+    {
+        var entity = await GetNewProductAsync();
+        await MaliwanDbContext.Products.AddAsync(entity);
         await MaliwanDbContext.SaveChangesAsync();
         return entity;
     }

@@ -183,6 +183,9 @@
   <data name="ProductColorNotFound" xml:space="preserve">
     <value>Cor do produto não encontrada.</value>
   </data>
+  <data name="ProductNotFound" xml:space="preserve">
+    <value>Produto não encontrado.</value>
+  </data>
   <data name="ProductSizeNotFound" xml:space="preserve">
     <value>Tamanho de produto não encontrada.</value>
   </data>
