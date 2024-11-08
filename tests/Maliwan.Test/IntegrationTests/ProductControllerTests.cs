@@ -63,6 +63,13 @@ public class ProductControllerTests
 
         var request = new ProductSearchRequest(idSubcategory: entity.IdSubcategory);
 
+        if (!await _testsFixture.MaliwanDbContext.Products.AnyAsync(e => !e.Active && !e.DeletedAt.HasValue))
+        {
+            entity = _testsFixture.EntityFixture.ProductFixture.Valid();
+            entity.Active = false;
+            await _testsFixture.MaliwanDbContext.Products.AddAsync(entity);
+        }
+
         // Act & Assert
         var responseObj = await _testsFixture.Client
             .RemoveToken()

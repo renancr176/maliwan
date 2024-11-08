@@ -92,6 +92,13 @@ public class PaymentMethodControllerTests
 
         var request = new PaymentMethodSearchRequest(name: entity.Name);
 
+        if (!await _testsFixture.MaliwanDbContext.PaymentMethods.AnyAsync(e => !e.Active && !e.DeletedAt.HasValue))
+        {
+            entity = _testsFixture.EntityFixture.PaymentMethodFixture.Valid();
+            entity.Active = false;
+            await _testsFixture.MaliwanDbContext.PaymentMethods.AddAsync(entity);
+        }
+
         // Act & Assert
         var responseObj = await _testsFixture.Client
             .RemoveToken()

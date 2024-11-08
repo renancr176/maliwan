@@ -7,7 +7,6 @@ using Maliwan.Domain.Core.Responses;
 using Maliwan.Service.Api;
 using Maliwan.Service.Api.Models.Responses;
 using Maliwan.Test.Extensions;
-using Maliwan.Test.Fixtures;
 using Maliwan.Test.IntegrationTests.Config;
 using Microsoft.EntityFrameworkCore;
 
@@ -95,6 +94,15 @@ public class SubcategoryControllerTests
                      ?? await _testsFixture.GetInsertedNewSubcategoryAsync();
 
         var request = new SubcategorySearchRequest(name: entity.Name);
+
+        var idCategory = entity.IdCategory;
+        if (!await _testsFixture.MaliwanDbContext.Subcategories.AnyAsync(e => !e.Active && !e.DeletedAt.HasValue))
+        {
+            entity = _testsFixture.EntityFixture.SubcategoryFixture.Valid();
+            entity.IdCategory = idCategory;
+            entity.Active = false;
+            await _testsFixture.MaliwanDbContext.Subcategories.AddAsync(entity);
+        }
 
         // Act & Assert
         var responseObj = await _testsFixture.Client

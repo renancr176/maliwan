@@ -28,8 +28,10 @@ public class CommandToEntityMappingProfile : Profile
 
         #region Brand
 
-        CreateMap<CreateBrandCommand, Brand>();
-        CreateMap<UpdateBrandCommand, Brand>();
+        CreateMap<CreateBrandCommand, Brand>()
+            .ForMember(dest => dest.Sku, act => act.MapFrom(src => src.Sku.Trim().ToUpper()));
+        CreateMap<UpdateBrandCommand, Brand>()
+            .ForMember(dest => dest.Sku, act => act.MapFrom(src => src.Sku.Trim().ToUpper()));
 
         #endregion
 
@@ -49,8 +51,10 @@ public class CommandToEntityMappingProfile : Profile
 
         #region Gender
 
-        CreateMap<CreateGenderCommand, Gender>();
-        CreateMap<UpdateGenderCommand, Gender>();
+        CreateMap<CreateGenderCommand, Gender>()
+            .ForMember(dest => dest.Sku, act => act.MapFrom(src => src.Sku.Trim().ToUpper()));
+        CreateMap<UpdateGenderCommand, Gender>()
+            .ForMember(dest => dest.Sku, act => act.MapFrom(src => src.Sku.Trim().ToUpper()));
 
         #endregion
 
@@ -63,28 +67,37 @@ public class CommandToEntityMappingProfile : Profile
 
         #region Product
 
-        CreateMap<CreateProductCommand, Product>();
-        CreateMap<UpdateProductCommand, Product>();
+        CreateMap<CreateProductCommand, Product>()
+            .ForMember(dest => dest.Sku, act => act.MapFrom(src => src.Sku.Trim().ToUpper()));
+        CreateMap<UpdateProductCommand, Product>()
+            .ForMember(dest => dest.Sku, act => act.MapFrom(src => src.Sku.Trim().ToUpper()));
 
         #endregion
 
         #region ProductColor
 
-        CreateMap<CreateProductColorCommand, ProductColor>();
-        CreateMap<UpdateProductColorCommand, ProductColor>();
+        CreateMap<CreateProductColorCommand, ProductColor>()
+            .ForMember(dest => dest.Sku, act => act.MapFrom(src => src.Sku.Trim().ToUpper()));
+        CreateMap<UpdateProductColorCommand, ProductColor>()
+            .ForMember(dest => dest.Sku, act => act.MapFrom(src => src.Sku.Trim().ToUpper()));
 
         #endregion
 
         #region ProductSize
 
-        CreateMap<CreateProductSizeCommand, ProductSize>();
-        CreateMap<UpdateProductSizeCommand, ProductSize>();
+        CreateMap<CreateProductSizeCommand, ProductSize>()
+            .ForMember(dest => dest.Sku, act => act.MapFrom(src => src.Sku.Trim().ToUpper()));
+        CreateMap<UpdateProductSizeCommand, ProductSize>()
+            .ForMember(dest => dest.Sku, act => act.MapFrom(src => src.Sku.Trim().ToUpper()));
 
         #endregion
 
         #region Subcategory
 
-        CreateMap<CreateSubcategoryCommand, Subcategory>();
+        CreateMap<CreateSubcategoryCommand, Subcategory>()
+            .ForMember(dest => dest.Sku, act => act.MapFrom(src => src.Sku.Trim().ToUpper()));
+        CreateMap<UpdateSubcategoryCommand, Subcategory>()
+            .ForMember(dest => dest.Sku, act => act.MapFrom(src => src.Sku.Trim().ToUpper()));
 
         #endregion
 

@@ -92,6 +92,13 @@ public class BrandControllerTests
 
         var request = new BrandSearchRequest(name: entity.Name);
 
+        if (!await _testsFixture.MaliwanDbContext.Brands.AnyAsync(e => !e.Active && !e.DeletedAt.HasValue))
+        {
+            entity = _testsFixture.EntityFixture.BrandFixture.Valid();
+            entity.Active = false;
+            await _testsFixture.MaliwanDbContext.Brands.AddAsync(entity);
+        }
+
         // Act & Assert
         var responseObj = await _testsFixture.Client
             .RemoveToken()

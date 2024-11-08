@@ -87,7 +87,7 @@ public class CategoryQuery : ICategoryQuery
 
             #region Be careful when changing the permissions check
 
-            Expression<Func<Category, bool>> permitions = e => (isAdmin || e.Active) && (isAdmin || e.Subcategories.All(e => e.Active));
+            Expression<Func<Category, bool>> permitions = e => (isAdmin || e.Active);
 
             #endregion
 

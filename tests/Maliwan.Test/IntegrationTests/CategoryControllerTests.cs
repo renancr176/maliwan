@@ -92,6 +92,13 @@ public class CategoryControllerTests
 
         var request = new CategorySearchRequest(name: entity.Name);
 
+        if (!await _testsFixture.MaliwanDbContext.Categories.AnyAsync(e => !e.Active && !e.DeletedAt.HasValue))
+        {
+            entity = _testsFixture.EntityFixture.CategoryFixture.Valid();
+            entity.Active = false;
+            await _testsFixture.MaliwanDbContext.Categories.AddAsync(entity);
+        }
+
         // Act & Assert
         var responseObj = await _testsFixture.Client
             .RemoveToken()
