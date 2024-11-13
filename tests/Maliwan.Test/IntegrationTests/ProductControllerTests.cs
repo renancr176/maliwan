@@ -37,8 +37,13 @@ public class ProductControllerTests
     {
         // Arrange 
         var entity = await _testsFixture.MaliwanDbContext.Products
-                         .FirstOrDefaultAsync(e => e.Active && !e.DeletedAt.HasValue)
-                     ?? await _testsFixture.GetInsertedNewProductAsync();
+                         .FirstOrDefaultAsync(e => e.Active && !e.DeletedAt.HasValue && e.Stocks.Any(s => !s.DeletedAt.HasValue));
+
+        if (entity == null)
+        {
+            entity = await _testsFixture.GetInsertedNewProductAsync();
+            await _testsFixture.GetInsertedNewStockAsync(entity);
+        }
 
         // Act & Assert
         var responseObj = await _testsFixture.Client
