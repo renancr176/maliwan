@@ -6,19 +6,14 @@ namespace Maliwan.Test.Fixtures;
 
 public class ProductFixture : IDisposable
 {
-    public Faker Faker { get; private set; }
+    public Faker Faker => new Faker("pt_BR");
 
-    public ProductFixture()
+    public Product Valid(int? idBrand = null, int? idSubcategory = null, int? idGender = null)
     {
-        Faker = new Faker("pt_BR");
-    }
-
-    public Product Valid()
-    {
-        Faker = new Faker("pt_BR");
         var name = Faker.Commerce.ProductName();
         var sku = name.GetSku();
-        return new Product(1, 1, 1, name, Faker.Random.Decimal(10M, 200M), sku, true);
+        return new Product(idBrand ?? 1, idSubcategory ?? 1, idGender ?? 1, name, Faker.Random.Decimal(10M, 200M), sku,
+            true);
     }
 
     public Product Invalid()

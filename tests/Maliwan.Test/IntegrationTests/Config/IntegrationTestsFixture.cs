@@ -42,7 +42,7 @@ public class IntegrationTestsFixture<TStartup> : IDisposable where TStartup : cl
         Client = Factory.CreateClient();
         EntityFixture = new EntityFixture();
 
-        AdminUserName = "usertest@telecall.com.br";
+        AdminUserName = "usertest@maliwan.com.br";
         AdminPassword = "g}}P9=#%2L~R,fH?=_<]76Dc#96@Em65";
 
         Services = Factory.Server.Services;
@@ -238,14 +238,6 @@ public class IntegrationTestsFixture<TStartup> : IDisposable where TStartup : cl
 
     public async Task<Product> GetNewProductAsync()
     {
-        var entity = EntityFixture.ProductFixture.Valid();
-        while (await MaliwanDbContext.Products.AnyAsync(e =>
-                   e.Name.Trim().ToLower() == entity.Name.Trim().ToLower()
-                   && !e.DeletedAt.HasValue))
-        {
-            entity = EntityFixture.ProductFixture.Valid();
-        }
-
         var brand = await MaliwanDbContext.Brands.FirstOrDefaultAsync(e => e.Active && !e.DeletedAt.HasValue) ??
                     await GetInsertedNewBrandAsync();
         var subcategory =
@@ -256,9 +248,14 @@ public class IntegrationTestsFixture<TStartup> : IDisposable where TStartup : cl
             ? (await MaliwanDbContext.Genders.FirstOrDefaultAsync(e => !e.DeletedAt.HasValue) ?? await GetInsertedNewGenderAsync())
             : null;
 
-        entity.IdBrand = brand.Id;
-        entity.IdSubcategory = subcategory.Id;
-        entity.IdGender = gender?.Id;
+        var entity = EntityFixture.ProductFixture.Valid(brand.Id, subcategory.Id, gender?.Id);
+        while (await MaliwanDbContext.Products.AnyAsync(e =>
+                   e.Name.Trim().ToLower() == entity.Name.Trim().ToLower()
+                   && !e.DeletedAt.HasValue))
+        {
+            entity = EntityFixture.ProductFixture.Valid();
+        }
+
         return entity;
     }
 
@@ -298,6 +295,28 @@ public class IntegrationTestsFixture<TStartup> : IDisposable where TStartup : cl
         await MaliwanDbContext.ProductSizes.AddAsync(entity);
         await MaliwanDbContext.SaveChangesAsync();
         return entity;
+    }
+
+    public async Task<Stock> GetNewStockAsync(Product? product = null)
+    {
+        product = product ??
+                  await MaliwanDbContext.Products.FirstOrDefaultAsync(e => e.Active && !e.DeletedAt.HasValue && !e.Stocks.Any()) ??
+                  await GetInsertedNewProductAsync();
+
+
+        var productSize = await MaliwanDbContext.ProductSizes.FirstOrDefaultAsync(e => !e.DeletedAt.HasValue) ?? await GetInsertedNewProductSizeAsync();
+        var producColor = await MaliwanDbContext.ProductColors.FirstOrDefaultAsync(e => !e.DeletedAt.HasValue) ??
+                          await GetInsertedNewProductColorAsync();
+
+        return EntityFixture.StockFixture.Valid(product.Id, productSize.Id, producColor.Id);
+    }
+
+    public async Task<Stock> GetInsertedNewStockAsync(Product? product = null)
+    {
+        var stock = await GetNewStockAsync(product);
+        await MaliwanDbContext.Stocks.AddAsync(stock);
+        await MaliwanDbContext.SaveChangesAsync();
+        return stock;
     }
 
     public async Task<Subcategory> GetInsertedNewSubcategoryAsync(Category category = null)

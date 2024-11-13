@@ -17,6 +17,7 @@ public class EntityFixture : IDisposable
     public ProductFixture ProductFixture { get; set; }
     public ProductColorFixture ProductColorFixture { get; set; }
     public ProductSizeFixture ProductSizeFixture { get; set; }
+    public StockFixture StockFixture { get; set; }
     public SubcategoryFixture SubcategoryFixture { get; set; }
 
     public EntityFixture()
@@ -29,6 +30,7 @@ public class EntityFixture : IDisposable
         ProductFixture = new ProductFixture();
         ProductColorFixture = new ProductColorFixture();
         ProductSizeFixture = new ProductSizeFixture();
+        StockFixture = new StockFixture();
         SubcategoryFixture = new SubcategoryFixture();
     }
 
@@ -42,6 +44,7 @@ public class EntityFixture : IDisposable
         ProductFixture.Dispose();
         ProductColorFixture.Dispose();
         ProductSizeFixture.Dispose();
+        StockFixture.Dispose();
         SubcategoryFixture.Dispose();
     }
 }

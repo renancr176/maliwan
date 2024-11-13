@@ -8,6 +8,7 @@ using Maliwan.Application.Commands.MaliwanContext.PaymentMethodCommands;
 using Maliwan.Application.Commands.MaliwanContext.ProductColorCommands;
 using Maliwan.Application.Commands.MaliwanContext.ProductCommands;
 using Maliwan.Application.Commands.MaliwanContext.ProductSizeCommands;
+using Maliwan.Application.Commands.MaliwanContext.StockCommands;
 using Maliwan.Application.Commands.MaliwanContext.SubcategoryCommands;
 using Maliwan.Domain.IdentityContext.Entities;
 using Maliwan.Domain.MaliwanContext.Entities;
@@ -89,6 +90,13 @@ public class CommandToEntityMappingProfile : Profile
             .ForMember(dest => dest.Sku, act => act.MapFrom(src => src.Sku.Trim().ToUpper()));
         CreateMap<UpdateProductSizeCommand, ProductSize>()
             .ForMember(dest => dest.Sku, act => act.MapFrom(src => src.Sku.Trim().ToUpper()));
+
+        #endregion
+
+        #region Stock
+
+        CreateMap<CreateStockCommand, Stock>();
+        CreateMap<UpdateStockCommand, Stock>();
 
         #endregion
 

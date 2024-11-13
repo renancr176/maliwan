@@ -33,10 +33,15 @@ public class StockValidator : EntityValidator<Stock>, IStockValidator
     private readonly IProductSizeRepository _productSizeRepository;
     private readonly IProductColorRepository _productColorRepository;
 
-    public StockValidator(IStringLocalizer<StockValidator> localizer, IStockRepository stockRepository)
+    public StockValidator(IStringLocalizer<StockValidator> localizer, IStockRepository stockRepository,
+        IProductRepository productRepository, IProductSizeRepository productSizeRepository,
+        IProductColorRepository productColorRepository)
     {
         _localizer = localizer;
         _stockRepository = stockRepository;
+        _productRepository = productRepository;
+        _productSizeRepository = productSizeRepository;
+        _productColorRepository = productColorRepository;
 
         RuleFor(e => e.IdProduct)
             .MustAsync(ProductExistsAsync)

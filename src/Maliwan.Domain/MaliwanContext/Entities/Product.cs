@@ -11,6 +11,7 @@ public class Product : Entity
     public decimal UnitPrice { get; set; }
     public string Sku { get; set; }
     public bool Active { get; set; } = true;
+    public int Quantity => Stocks?.Where(e => !e.DeletedAt.HasValue)?.Sum(e => e.CurrentQuantity) ?? 0;
 
     #region Relationships
 

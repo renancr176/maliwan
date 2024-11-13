@@ -6,16 +6,10 @@ namespace Maliwan.Test.Fixtures;
 
 public class GenderFixture : IDisposable
 {
-    public Faker Faker { get; private set; }
-
-    public GenderFixture()
-    {
-        Faker = new Faker("pt_BR");
-    }
+    public Faker Faker => new Faker("pt_BR");
 
     public Gender Valid()
     {
-        Faker = new Faker("pt_BR");
         var name = $"Gender {Faker.Random.String2(Faker.Random.Int(1, 5))}";
         var sku = name.GetSku();
         return new Gender(name, sku);

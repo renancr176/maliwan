@@ -65,5 +65,11 @@ public class StockMapping : EntityMap<Stock>
             .HasForeignKey(e => e.IdStock);
 
         #endregion
+
+        #region Dinamic/Ignored Properties
+
+        builder.Ignore(e => e.CurrentQuantity);
+
+        #endregion
     }
 }

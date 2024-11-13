@@ -7,16 +7,10 @@ namespace Maliwan.Test.Fixtures;
 
 public class CustomerFixture : IDisposable
 {
-    public Faker Faker { get; private set; }
-
-    public CustomerFixture()
-    {
-        Faker = new Faker("pt_BR");
-    }
+    public Faker Faker => new Faker("pt_BR");
 
     public Customer Valid()
     {
-        Faker = new Faker("pt_BR");
         var type = Faker.PickRandom<CustomerTypeEnum>();
         var name = type == CustomerTypeEnum.Individual ? Faker.Person.FullName : Faker.Company.CompanyName();
         var document = type == CustomerTypeEnum.Individual ? Faker.Person.Cpf() : Faker.Company.Cnpj();

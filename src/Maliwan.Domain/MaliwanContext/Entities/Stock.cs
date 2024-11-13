@@ -12,19 +12,13 @@ public class Stock : Entity
     public DateTime InputDate { get; set; }
     public decimal PurchasePrice { get; set; }
     public bool Active { get; set; } = true;
-    public int CurrentQuantity => (
-        InputQuantity - (
-            OrderItems.Any() 
-                ? OrderItems.Sum(x => x.Quantity) 
-                : 0
-            )
-        );
     public string Sku => $@"{Product?.Brand?.Sku ?? "00"}
 {Product?.Subcategory?.Sku ?? "00"}
 {Product?.Gender?.Sku ?? "00"}
 {Size?.Sku ?? "00"}
 {Color?.Sku ?? "00"}
 {Product?.Sku ?? "00"}";
+    public int CurrentQuantity => (InputQuantity - OrderItems.Sum(x => x.Quantity));
     public StockLevelEnum StockLevel => CurrentQuantity >= 3
         ? (CurrentQuantity >= (2 * (InputQuantity / 3))
             ? StockLevelEnum.High
@@ -36,7 +30,7 @@ public class Stock : Entity
     public virtual Product Product { get; set; }
     public virtual ProductSize Size { get; set; }
     public virtual ProductColor Color { get; set; }
-    public virtual ICollection<OrderItem> OrderItems { get; set; }
+    public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
 
     #endregion
 

@@ -9,6 +9,7 @@ public class ProductModel : EntityModel
     public decimal UnitPrice { get; set; }
     public string Sku { get; set; }
     public bool Active { get; set; }
+    public int Quantity { get; set; }
     public BrandModel Brand { get; set; }
     public SubcategoryModel Subcategory { get; set; }
     public GenderModel Gender { get; set; }

@@ -6,6 +6,7 @@ using Maliwan.Application.Commands.MaliwanContext.PaymentMethodCommands;
 using Maliwan.Application.Commands.MaliwanContext.ProductColorCommands;
 using Maliwan.Application.Commands.MaliwanContext.ProductCommands;
 using Maliwan.Application.Commands.MaliwanContext.ProductSizeCommands;
+using Maliwan.Application.Commands.MaliwanContext.StockCommands;
 using Maliwan.Application.Commands.MaliwanContext.SubcategoryCommands;
 using Maliwan.Application.Models.MaliwanContext;
 using MediatR;
@@ -88,6 +89,14 @@ public static class MaliwanContextCommandsIoC
         services
             .AddScoped<IRequestHandler<UpdateProductSizeCommand, ProductSizeModel?>, UpdateProductSizeCommandHandler>();
         services.AddScoped<IRequestHandler<DeleteProductSizeCommand, bool>, DeleteProductSizeCommandHandler>();
+
+        #endregion
+
+        #region Stock
+
+        services.AddScoped<IRequestHandler<CreateStockCommand, StockModel?>, CreateStockCommandHandler>();
+        services.AddScoped<IRequestHandler<UpdateStockCommand, StockModel?>, UpdateStockCommandHandler>();
+        services.AddScoped<IRequestHandler<DeleteStockCommand, bool>, DeleteStockCommandHandler>();
 
         #endregion
 
