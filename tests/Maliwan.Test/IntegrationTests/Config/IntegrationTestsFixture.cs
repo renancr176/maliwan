@@ -221,7 +221,42 @@ public class IntegrationTestsFixture<TStartup> : IDisposable where TStartup : cl
         await MaliwanDbContext.SaveChangesAsync();
         return entity;
     }
-    
+
+    public async Task<OrderItem> GetNewOrderItemAsync(Stock stock = null)
+    {
+        stock ??= await GetInsertedNewStockAsync();
+        var product = await MaliwanDbContext.Products.FirstOrDefaultAsync(e => e.Id == stock.IdProduct);
+        return new OrderItem(stock.Id, 1, product.UnitPrice, 0M);
+    }
+
+    public async Task<Order> GetNewOrderAsync(Customer customer = null, IEnumerable<Stock> stocks = null)
+    {
+        customer ??= await GetInsertedNewCustomerAsync();
+        var orderItems = new List<OrderItem>();
+        if (stocks != null && stocks.Any())
+        {
+            foreach (var stock in stocks)
+            {
+                orderItems.Add(await GetNewOrderItemAsync(stock));
+            }
+        }
+        else
+        {
+            orderItems.Add(await GetNewOrderItemAsync());
+        }
+        var entity = new Order(customer.Id, orderItems);
+
+        return entity;
+    }
+
+    public async Task<Order> GetInsertedNewOrderAsync(Customer customer = null, IEnumerable<Stock> stocks = null)
+    {
+        var entity = await GetNewOrderAsync(customer, stocks);
+        await MaliwanDbContext.Orders.AddAsync(entity);
+        await MaliwanDbContext.SaveChangesAsync();
+        return entity;
+    }
+
     public async Task<PaymentMethod> GetInsertedNewPaymentMethodAsync()
     {
         var entity = EntityFixture.PaymentMethodFixture.Valid();
@@ -299,10 +334,12 @@ public class IntegrationTestsFixture<TStartup> : IDisposable where TStartup : cl
 
     public async Task<Stock> GetNewStockAsync(Product? product = null)
     {
-        product = product ??
-                  await MaliwanDbContext.Products.FirstOrDefaultAsync(e => e.Active && !e.DeletedAt.HasValue && !e.Stocks.Any()) ??
+        product ??=
+                  await MaliwanDbContext.Products.FirstOrDefaultAsync(e => 
+                      e.Active 
+                      && !e.DeletedAt.HasValue 
+                      && !e.Stocks.Any()) ??
                   await GetInsertedNewProductAsync();
-
 
         var productSize = await MaliwanDbContext.ProductSizes.FirstOrDefaultAsync(e => !e.DeletedAt.HasValue) ?? await GetInsertedNewProductSizeAsync();
         var producColor = await MaliwanDbContext.ProductColors.FirstOrDefaultAsync(e => !e.DeletedAt.HasValue) ??

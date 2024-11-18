@@ -2,9 +2,14 @@
 using System.ComponentModel;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Reflection;
+using System.Text;
+using System.Text.Json.Nodes;
+using FluentAssertions;
 using Flurl.Util;
 using Maliwan.Domain.Core.Enums;
 using Maliwan.Domain.Core.Extensions;
+using Newtonsoft.Json.Linq;
 
 namespace Maliwan.Test.Extensions;
 
@@ -62,7 +67,28 @@ public static class HttpClientExtensions
             NullValueHandling = NullValueHandling.Ignore
         });
 
-        var queryString = string.Join("&", JsonConvert.DeserializeObject(stringParams).ToKeyValuePairs().Select(q => $"{q.Key}={q.Value}"));
+        var queryString = new StringBuilder();
+
+        var index = 0;
+        foreach (var item in JObject.Parse(stringParams))
+        {
+            var type = request.GetType().Properties().FirstOrDefault(x => x.Name == item.Key)?.PropertyType;
+            var key = item.Key;
+            var value = item.Value.Type != JTokenType.Date
+                ? (item.Value.Type != JTokenType.Array ? item.Value.ToString() : "")
+                : item.Value.ToObject<DateTime>().ToString("O");
+
+            if (item.Value.Type == JTokenType.Array)
+            {
+                key = $"{key}[]";
+                value = String.Join(",", item.Value.ToObject(type));
+            }
+
+            queryString.Append($"{(index > 0 ? "&" : "")}{key}={value}");
+            index++;
+        }
+            
+            //string.Join("&", .ToKeyValuePairs().Select(q => $"{q.Key}={(q.Value.GetType() == typeof(DateTime) ? ((DateTime) q.Value).ToString("O") : q.Value)}"));
 
         return await client.GetFromJsonAsync<TValue>($"{requestUri}?{queryString}");
     }

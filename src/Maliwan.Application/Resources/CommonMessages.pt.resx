@@ -174,6 +174,12 @@
   <data name="ObjectUploadInvalidPart" xml:space="preserve">
     <value>Parte inválida do objeto, a próxima parte a ser processada deveria ser a parte #Val.</value>
   </data>
+  <data name="OrderItemQuantityMinVal" xml:space="preserve">
+    <value>A quantidade do produto #ProductName deve ser maior que #QuantityMinVal.</value>
+  </data>
+  <data name="OrderItemsMinVal" xml:space="preserve">
+    <value>Para criar um pedido, deve conter pelo menos 1 produto.</value>
+  </data>
   <data name="PasswordResetEmailSent" xml:space="preserve">
     <value>Verifique seu e-mail para mais instruções.</value>
   </data>
@@ -186,11 +192,17 @@
   <data name="ProductNotFound" xml:space="preserve">
     <value>Produto não encontrado.</value>
   </data>
+  <data name="ProductOutOfStock" xml:space="preserve">
+    <value>#ProductName sem estoque.</value>
+  </data>
   <data name="ProductSizeNotFound" xml:space="preserve">
     <value>Tamanho de produto não encontrada.</value>
   </data>
   <data name="RelationshipNotFound" xml:space="preserve">
     <value>O relacionamento não foi encontrado.</value>
+  </data>
+  <data name="StockQuantityExceded" xml:space="preserve">
+    <value>A quantidade escolhida do produto #ProductName excede a quantidade em estoque de #CurrentQuantity.</value>
   </data>
   <data name="SubcategoryNotFound" xml:space="preserve">
     <value>Subcategoria não encontrada.</value>

@@ -4,6 +4,7 @@ using Maliwan.Application.Commands.MaliwanContext.BrandCommands;
 using Maliwan.Application.Commands.MaliwanContext.CategoryCommands;
 using Maliwan.Application.Commands.MaliwanContext.CustomerCommands;
 using Maliwan.Application.Commands.MaliwanContext.GenderCommands;
+using Maliwan.Application.Commands.MaliwanContext.OrderCommands;
 using Maliwan.Application.Commands.MaliwanContext.PaymentMethodCommands;
 using Maliwan.Application.Commands.MaliwanContext.ProductColorCommands;
 using Maliwan.Application.Commands.MaliwanContext.ProductCommands;
@@ -56,6 +57,18 @@ public class CommandToEntityMappingProfile : Profile
             .ForMember(dest => dest.Sku, act => act.MapFrom(src => src.Sku.Trim().ToUpper()));
         CreateMap<UpdateGenderCommand, Gender>()
             .ForMember(dest => dest.Sku, act => act.MapFrom(src => src.Sku.Trim().ToUpper()));
+
+        #endregion
+
+        #region Order
+
+        CreateMap<CreateOrderCommand, Order>();
+
+        #endregion
+
+        #region OrderPayment
+
+
 
         #endregion
 

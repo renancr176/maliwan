@@ -37,6 +37,10 @@ public class CommonMessages
     public const string ProductColorNotFound = "Product color not found.";
     public const string ProductSizeNotFound = "Product size not found.";
     public const string SubcategoryNotFound = "Subcategory not found.";
+    public const string OrderItemsMinVal = "To create an order, it must contain at least 1 product..";
+    public const string OrderItemQuantityMinVal = "Quantity of product #ProductName must be greater than #QuantityMinVal.";
+    public const string ProductOutOfStock = "#ProductName out of stock.";
+    public const string StockQuantityExceded = "The quantity selected for product #ProductName exceeds the in-stock quantity of #CurrentQuantity.";
 
     #endregion
 }

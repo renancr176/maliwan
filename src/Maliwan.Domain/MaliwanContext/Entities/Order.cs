@@ -15,7 +15,7 @@ public class Order : EntityIntId
     #region Relationships
 
     public virtual Customer Customer { get; set; }
-    public virtual ICollection<OrderItem> OrderItems { get; set; }
+    public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
     public virtual ICollection<OrderPayment> OrderPayments { get; set; }
 
     #endregion
@@ -24,9 +24,9 @@ public class Order : EntityIntId
     {
     }
 
-    public Order(Guid idCustomer, DateTime sellDate)
+    public Order(Guid idCustomer, ICollection<OrderItem> orderItems)
     {
         IdCustomer = idCustomer;
-        SellDate = sellDate;
+        OrderItems = orderItems;
     }
 }

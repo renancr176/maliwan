@@ -1,4 +1,5 @@
-﻿using Maliwan.Domain.Core.DomainObjects;
+﻿using System.Linq.Expressions;
+using Maliwan.Domain.Core.DomainObjects;
 using Maliwan.Domain.MaliwanContext.Enums;
 
 namespace Maliwan.Domain.MaliwanContext.Entities;
@@ -12,18 +13,25 @@ public class Stock : Entity
     public DateTime InputDate { get; set; }
     public decimal PurchasePrice { get; set; }
     public bool Active { get; set; } = true;
-    public string Sku => $@"{Product?.Brand?.Sku ?? "00"}
-{Product?.Subcategory?.Sku ?? "00"}
-{Product?.Gender?.Sku ?? "00"}
-{Size?.Sku ?? "00"}
-{Color?.Sku ?? "00"}
-{Product?.Sku ?? "00"}";
-    public int CurrentQuantity => (InputQuantity - OrderItems.Sum(x => x.Quantity));
-    public StockLevelEnum StockLevel => CurrentQuantity >= 3
-        ? (CurrentQuantity >= (2 * (InputQuantity / 3))
+
+    #region Virtual properties
+    
+    public virtual string Sku => $@"{Product?.Brand?.Sku ?? "00"}{Product?.Subcategory?.Sku ?? "00"}{Product?.Gender?.Sku ?? "00"}{Size?.Sku ?? "00"}{Color?.Sku ?? "00"}{Product?.Sku ?? "00"}";
+    public virtual int CurrentQuantity => CurrentQuantityFunc(this);
+    public virtual StockLevelEnum StockLevel => StockLevelFunc(this);
+
+    #endregion
+
+    #region Predicates
+
+    public Func<Stock, int> CurrentQuantityFunc = e => (e.InputQuantity - e.OrderItems.Where(x => !x.DeletedAt.HasValue).Sum(x => x.Quantity));
+    public Func<Stock, StockLevelEnum> StockLevelFunc = e => e.CurrentQuantityFunc(e) >= 3
+        ? (e.CurrentQuantityFunc(e) >= (2 * (e.InputQuantity / 3))
             ? StockLevelEnum.High
-            : (CurrentQuantity > (InputQuantity / 3) ? StockLevelEnum.Medium : StockLevelEnum.Low))
+            : (e.CurrentQuantityFunc(e) > (e.InputQuantity / 3) ? StockLevelEnum.Medium : StockLevelEnum.Low))
         : StockLevelEnum.Low;
+
+    #endregion
 
     #region Relationships
 

@@ -140,9 +140,7 @@ public class ProductControllerTests
     public async Task Update_GivenExistingValidProduct_ShouldUpdateSuccessfully()
     {
         // Arrange 
-        var entity = await _testsFixture.MaliwanDbContext.Products
-                         .FirstOrDefaultAsync(e => !e.DeletedAt.HasValue)
-            ?? await _testsFixture.GetInsertedNewProductAsync();
+        var entity = await _testsFixture.GetInsertedNewProductAsync();
 
         var request = new UpdateProductCommand(
             entity.Id,

@@ -22,12 +22,17 @@ public class OrderItem : Entity
     {
     }
 
-    public OrderItem(int idOrder, Guid idStock, int quantity, decimal unitPrice, decimal discount)
+    public OrderItem(Guid idStock, int quantity, decimal unitPrice, decimal discount)
     {
-        IdOrder = idOrder;
         IdStock = idStock;
         Quantity = quantity;
         UnitPrice = unitPrice;
         Discount = discount;
+    }
+
+    public OrderItem(int idOrder, Guid idStock, int quantity, decimal unitPrice, decimal discount)
+        : this(idStock, quantity, unitPrice, discount)
+    {
+        IdOrder = idOrder;
     }
 }

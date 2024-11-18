@@ -4,6 +4,7 @@ using Maliwan.Application.Commands.MaliwanContext.StockCommands;
 using Maliwan.Application.Models.MaliwanContext.Queries.Requests;
 using Maliwan.Application.Models.MaliwanContext;
 using Maliwan.Domain.Core.Responses;
+using Maliwan.Domain.MaliwanContext.Entities;
 using Maliwan.Domain.MaliwanContext.Enums;
 using Maliwan.Service.Api;
 using Maliwan.Service.Api.Models.Responses;
@@ -59,18 +60,17 @@ public class StockControllerTests
 
     [Trait("IntegrationTest", "Controllers")]
     [Theory(DisplayName = "Search stocks should at least get a success response code 200/OK")]
-    [InlineData("ByProduct")]
-    [InlineData("CurrentQuantity")]
-    //[InlineData("StockLevel")]
-    public async Task Search_UserStocks_ShouldQuerySuccessfully(string testType)
+    [InlineData("ByProduct", null)]
+    [InlineData("CurrentQuantity", null)]
+    [InlineData("StockLevel", StockLevelEnum.High)]
+    [InlineData("StockLevel", StockLevelEnum.Medium)]
+    [InlineData("StockLevel", StockLevelEnum.Low)]
+    public async Task Search_UserStocks_ShouldQuerySuccessfully(string testType, StockLevelEnum? stockLevel = StockLevelEnum.High)
     {
         // Arrange 
-        var entity = await _testsFixture.MaliwanDbContext.Stocks
-                         .FirstOrDefaultAsync(e => !e.DeletedAt.HasValue && !e.OrderItems.Any())
-                     ?? await _testsFixture.GetInsertedNewStockAsync();
+        var entity = await _testsFixture.GetInsertedNewStockAsync();
 
         StockSearchRequest request = new StockSearchRequest();
-        var stockLevel = _testsFixture.EntityFixture.Faker.PickRandom<StockLevelEnum>();
 
         switch (testType)
         {
@@ -78,14 +78,46 @@ public class StockControllerTests
                 request = new StockSearchRequest(idProduct: entity.IdProduct);
                 break;
             case "CurrentQuantity":
-                //TODO: Criar pedido com este item para decrementar a quantidade atual.
+                await _testsFixture.GetInsertedNewOrderAsync(stocks: new List<Stock>() { entity });
+                entity = await _testsFixture.MaliwanDbContext.Stocks.Include(nameof(Stock.OrderItems))
+                    .FirstOrDefaultAsync(e => e.Id == entity.Id);
                 request = new StockSearchRequest(
-                    currentQuantityMin: (entity.InputQuantity - 1) > 0 ? (entity.InputQuantity - 1) : 0,
-                    currentQuantityMax: (entity.InputQuantity + 1));
+                    currentQuantityMin: (entity.CurrentQuantity - 1) > 0 ? (entity.CurrentQuantity - 1) : 0,
+                    currentQuantityMax: (entity.CurrentQuantity + 1));
                 break;
-            //case "StockLevel":
-            //    request = new StockSearchRequest(stockLevel: stockLevel);
-            //    break;
+            case "StockLevel":
+                var order = await _testsFixture.GetInsertedNewOrderAsync(stocks: new List<Stock>() { entity });
+                entity.InputQuantity = 9;
+                _testsFixture.MaliwanDbContext.Stocks.Update(entity);
+                await _testsFixture.MaliwanDbContext.SaveChangesAsync();
+
+                switch (stockLevel)
+                {
+                    case StockLevelEnum.Low:
+                        
+                        if (entity.StockLevel != StockLevelEnum.Low)
+                        {
+                            var orderItem = await _testsFixture.MaliwanDbContext.OrderItems.FirstOrDefaultAsync(e =>
+                                e.Id == order.OrderItems.First().Id);
+                            orderItem.Quantity = 6;
+                            _testsFixture.MaliwanDbContext.OrderItems.Update(orderItem);
+                            await _testsFixture.MaliwanDbContext.SaveChangesAsync();
+                        }
+                        break;
+                    case StockLevelEnum.Medium:
+                        if (entity.StockLevel != StockLevelEnum.Medium)
+                        {
+                            var orderItem = await _testsFixture.MaliwanDbContext.OrderItems.FirstOrDefaultAsync(e =>
+                                e.Id == order.OrderItems.First().Id);
+                            orderItem.Quantity = 4;
+                            _testsFixture.MaliwanDbContext.OrderItems.Update(orderItem);
+                            await _testsFixture.MaliwanDbContext.SaveChangesAsync();
+                        }
+                        break;
+                }
+
+                request = new StockSearchRequest(stockLevel: stockLevel);
+                break;
         }
 
         if (string.IsNullOrEmpty(_testsFixture.AdminAccessToken))
@@ -104,6 +136,10 @@ public class StockControllerTests
         responseObj.Errors.Should().HaveCount(0);
         responseObj.Data.Should().NotBeNull();
         responseObj.Data.Data.Should().NotBeNull();
+        if (testType == "CurrentQuantity")
+            responseObj.Data.Data.Should().OnlyContain(e => e.CurrentQuantity >= request.CurrentQuantityMin && e.CurrentQuantity <= request.CurrentQuantityMax);
+        if (testType == "StockLevel")
+            responseObj.Data.Data.Should().OnlyContain(e => e.StockLevel == stockLevel);
     }
 
     [Trait("IntegrationTest", "Controllers")]
@@ -146,7 +182,15 @@ public class StockControllerTests
     {
         // Arrange 
         var entity = await _testsFixture.MaliwanDbContext.Stocks
-                         .FirstOrDefaultAsync(e => !e.DeletedAt.HasValue)
+                         .FirstOrDefaultAsync(e =>
+                             !e.DeletedAt.HasValue &&
+                             e.Color.DeletedAt.HasValue &&
+                             e.Size.DeletedAt.HasValue &&
+                             !e.Product.DeletedAt.HasValue &&
+                             !e.Product.Brand.DeletedAt.HasValue &&
+                             !e.Product.Gender.DeletedAt.HasValue &&
+                             !e.Product.Subcategory.DeletedAt.HasValue &&
+                             !e.Product.Subcategory.Category.DeletedAt.HasValue)
             ?? await _testsFixture.GetInsertedNewStockAsync();
 
         var request = new UpdateStockCommand(
