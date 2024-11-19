@@ -37,9 +37,7 @@ public class StockControllerTests
     public async Task GetById_GivenExistingStock_ShouldGetSuccessfully()
     {
         // Arrange 
-        var entity = await _testsFixture.MaliwanDbContext.Stocks
-                         .FirstOrDefaultAsync(e => e.Active && !e.DeletedAt.HasValue)
-                     ?? await _testsFixture.GetInsertedNewStockAsync();
+        var entity = await _testsFixture.GetInsertedNewStockAsync();
 
         if (string.IsNullOrEmpty(_testsFixture.AdminAccessToken))
         {

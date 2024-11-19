@@ -10,7 +10,7 @@ public class StockFixture : IDisposable
     public Stock Valid(Guid? idProduct = null, int? idSize = null, int? idColor = null)
     {
         return new Stock(idProduct ?? Guid.NewGuid(), idSize ?? 1, idColor ?? 1, Faker.Random.Int(1, 20),
-            DateTime.UtcNow, Faker.Random.Decimal(9M, 99M));
+            DateTime.UtcNow, decimal.Round(Faker.Random.Decimal(9M, 99M), 2, MidpointRounding.AwayFromZero));
     }
 
     public Stock Invalid()

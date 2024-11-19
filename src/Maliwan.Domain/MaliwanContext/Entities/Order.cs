@@ -6,11 +6,26 @@ public class Order : EntityIntId
 {
     public Guid IdCustomer { get; set; }
     public DateTime SellDate { get; set; } = DateTime.UtcNow;
-    public decimal Total => (OrderItems?.Sum(e => e.Total) ?? 0M);
-    public decimal TotalDiscount => (OrderItems?.Sum(e => e.Discount) ?? 0M);
-    public decimal Subtotal => Total - TotalDiscount;
-    public decimal TotalPaid => OrderPayments?.Sum(e => e.AmountPaid) ?? 0M;
-    public decimal OutstandingBalance => (Subtotal - TotalPaid);
+
+    #region Virtual Properties
+    
+    public virtual decimal Total => TotalFunc(this);
+    public virtual decimal TotalDiscount => TotalDiscountFunc(this);
+    public virtual decimal Subtotal => SubtotalFunc(this);
+    public virtual decimal TotalPaid => TotalPaidFunc(this);
+    public virtual decimal OutstandingBalance => OutstandingBalanceFunc(this);
+
+    #endregion
+
+    #region Predicates
+
+    public Func<Order, decimal> TotalFunc = e => (e.OrderItems?.Sum(e => e.Total) ?? 0M);
+    public Func<Order, decimal> TotalDiscountFunc = e => (e.OrderItems?.Sum(e => e.Discount) ?? 0M);
+    public Func<Order, decimal> SubtotalFunc = e => (e.TotalFunc(e) - e.TotalDiscountFunc(e));
+    public Func<Order, decimal> TotalPaidFunc = e => (e.OrderPayments?.Sum(e => e.AmountPaid) ?? 0M);
+    public Func<Order, decimal> OutstandingBalanceFunc = e => (e.Subtotal - e.TotalPaidFunc(e));
+
+    #endregion
 
     #region Relationships
 

@@ -177,9 +177,7 @@ public class GenderControllerTests
     public async Task Delete_GivenExistingGender_ShouldDeleteSuccessfully()
     {
         // Arrange 
-        var entity = await _testsFixture.MaliwanDbContext.Genders
-                         .FirstOrDefaultAsync(e => !e.DeletedAt.HasValue)
-                     ?? await _testsFixture.GetInsertedNewGenderAsync();
+        var entity = await _testsFixture.GetInsertedNewGenderAsync();
 
         if (string.IsNullOrEmpty(_testsFixture.AdminAccessToken))
         {

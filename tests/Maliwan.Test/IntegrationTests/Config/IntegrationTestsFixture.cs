@@ -257,6 +257,30 @@ public class IntegrationTestsFixture<TStartup> : IDisposable where TStartup : cl
         return entity;
     }
 
+    public async Task<OrderPayment> GetNewOrderPaymentAsync(Order? order = null, PaymentMethod? paymentMethod = null)
+    {
+        order ??= await MaliwanDbContext.Orders
+                      .Include(nameof(Order.OrderPayments))
+                      .Include(nameof(Order.OrderItems))
+                      .FirstOrDefaultAsync(e => 
+                          !e.DeletedAt.HasValue
+                          && ((e.OrderItems.Sum(e => e.UnitPrice * e.Quantity) - e.OrderItems.Sum(e => e.Discount)) - e.OrderPayments.Sum(e => e.AmountPaid)) > 0)  ??
+                  await GetInsertedNewOrderAsync();
+        paymentMethod ??=
+            await MaliwanDbContext.PaymentMethods.FirstOrDefaultAsync(e => e.Active && !e.DeletedAt.HasValue) ??
+            await GetInsertedNewPaymentMethodAsync();
+
+        return new OrderPayment(order.Id, paymentMethod.Id, order.OutstandingBalance);
+    }
+
+    public async Task<OrderPayment> GetInsertedNewOrderPaymentAsync(Order? order = null, PaymentMethod? paymentMethod = null)
+    {
+        var entity = await GetNewOrderPaymentAsync(order, paymentMethod);
+        await MaliwanDbContext.OrderPayments.AddAsync(entity);
+        await MaliwanDbContext.SaveChangesAsync();
+        return entity;
+    }
+
     public async Task<PaymentMethod> GetInsertedNewPaymentMethodAsync()
     {
         var entity = EntityFixture.PaymentMethodFixture.Valid();
@@ -273,14 +297,10 @@ public class IntegrationTestsFixture<TStartup> : IDisposable where TStartup : cl
 
     public async Task<Product> GetNewProductAsync()
     {
-        var brand = await MaliwanDbContext.Brands.FirstOrDefaultAsync(e => e.Active && !e.DeletedAt.HasValue) ??
-                    await GetInsertedNewBrandAsync();
-        var subcategory =
-            await MaliwanDbContext.Subcategories.FirstOrDefaultAsync(e =>
-                e.Active && e.Category.Active && !e.DeletedAt.HasValue && !e.Category.DeletedAt.HasValue) ??
-            await GetInsertedNewSubcategoryAsync();
+        var brand = await GetInsertedNewBrandAsync();
+        var subcategory =await GetInsertedNewSubcategoryAsync(await GetInsertedNewCategoryAsync());
         var gender = EntityFixture.Faker.Random.Bool()
-            ? (await MaliwanDbContext.Genders.FirstOrDefaultAsync(e => !e.DeletedAt.HasValue) ?? await GetInsertedNewGenderAsync())
+            ? await GetInsertedNewGenderAsync()
             : null;
 
         var entity = EntityFixture.ProductFixture.Valid(brand.Id, subcategory.Id, gender?.Id);

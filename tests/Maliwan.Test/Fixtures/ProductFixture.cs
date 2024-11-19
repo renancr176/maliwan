@@ -12,7 +12,7 @@ public class ProductFixture : IDisposable
     {
         var name = Faker.Commerce.ProductName();
         var sku = name.GetSku();
-        return new Product(idBrand ?? 1, idSubcategory ?? 1, idGender ?? 1, name, Faker.Random.Decimal(10M, 200M), sku,
+        return new Product(idBrand ?? 1, idSubcategory ?? 1, idGender ?? 1, name, decimal.Round(Faker.Random.Decimal(10M, 200M), 2, MidpointRounding.AwayFromZero), sku,
             true);
     }
 

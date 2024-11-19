@@ -20,11 +20,10 @@ public class OrderPayment : Entity
     {
     }
 
-    public OrderPayment(int idOrder, int idPaymentMethod, decimal amountPaid, DateTime paymentDate)
+    public OrderPayment(int idOrder, int idPaymentMethod, decimal amountPaid)
     {
         IdOrder = idOrder;
         IdPaymentMethod = idPaymentMethod;
         AmountPaid = amountPaid;
-        PaymentDate = paymentDate;
     }
 }

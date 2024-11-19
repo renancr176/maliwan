@@ -3,6 +3,7 @@ using Maliwan.Application.Commands.MaliwanContext.CategoryCommands;
 using Maliwan.Application.Commands.MaliwanContext.CustomerCommands;
 using Maliwan.Application.Commands.MaliwanContext.GenderCommands;
 using Maliwan.Application.Commands.MaliwanContext.OrderCommands;
+using Maliwan.Application.Commands.MaliwanContext.OrderPaymentCommands;
 using Maliwan.Application.Commands.MaliwanContext.PaymentMethodCommands;
 using Maliwan.Application.Commands.MaliwanContext.ProductColorCommands;
 using Maliwan.Application.Commands.MaliwanContext.ProductCommands;
@@ -10,7 +11,6 @@ using Maliwan.Application.Commands.MaliwanContext.ProductSizeCommands;
 using Maliwan.Application.Commands.MaliwanContext.StockCommands;
 using Maliwan.Application.Commands.MaliwanContext.SubcategoryCommands;
 using Maliwan.Application.Models.MaliwanContext;
-using Maliwan.Domain.MaliwanContext.Entities;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -61,7 +61,13 @@ public static class MaliwanContextCommandsIoC
 
         #region OrderPayment
 
-
+        services
+            .AddScoped<IRequestHandler<CreateOrderPaymentCommand, OrderPaymentModel?>,
+                CreateOrderPaymentCommandHandler>();
+        services
+            .AddScoped<IRequestHandler<UpdateOrderPaymentCommand, OrderPaymentModel?>,
+                UpdateOrderPaymentCommandHandler>();
+        services.AddScoped<IRequestHandler<DeleteOrderPaymentCommand, bool>, DeleteOrderPaymentCommandHandler>();
 
         #endregion
 

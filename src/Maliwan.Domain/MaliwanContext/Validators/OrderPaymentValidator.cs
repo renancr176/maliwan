@@ -98,13 +98,19 @@ public class OrderPaymentValidator : EntityValidator<OrderPayment>, IOrderPaymen
 
     private async Task<decimal> GetOrderOutstandingBalanceAsync(OrderPayment entity)
     {
-        var order = await _orderRepository.FirstOrDefaultAsync(e => e.Id == entity.IdOrder, new[] { nameof(Order.OrderPayments) });
+        var order = await _orderRepository.FirstOrDefaultAsync(e => 
+            e.Id == entity.IdOrder, 
+            new[]
+            {
+                nameof(Order.OrderItems),
+                nameof(Order.OrderPayments),
+            });
 
         if (order != null && order.OrderPayments.Any(e => e.Id == entity.Id))
         {
             order.OrderPayments.Remove(order.OrderPayments.First(e => e.Id == entity.Id));
         }
 
-        return order?.OutstandingBalance ?? 0M;
+        return order.OutstandingBalance;
     }
 }

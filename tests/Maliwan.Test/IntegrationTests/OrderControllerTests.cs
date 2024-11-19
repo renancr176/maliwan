@@ -11,6 +11,7 @@ using Maliwan.Service.Api.Models.Responses;
 using Maliwan.Test.Extensions;
 using Maliwan.Test.IntegrationTests.Config;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace Maliwan.Test.IntegrationTests;
 
@@ -37,9 +38,7 @@ public class OrderControllerTests
     public async Task GetById_GivenExistingOrder_ShouldGetSuccessfully()
     {
         // Arrange 
-        var entity = await _testsFixture.MaliwanDbContext.Orders
-                         .FirstOrDefaultAsync(e => !e.DeletedAt.HasValue)
-                     ?? await _testsFixture.GetInsertedNewOrderAsync();
+        var entity = await _testsFixture.GetInsertedNewOrderAsync();
 
         if (string.IsNullOrEmpty(_testsFixture.AdminAccessToken))
         {
@@ -54,7 +53,7 @@ public class OrderControllerTests
         // Assert 
         responseObj.Should().NotBeNull();
         responseObj.Success.Should().BeTrue();
-        responseObj.Errors.Should().HaveCount(0);
+        responseObj.Errors.Should().HaveCount(0, string.Join("\r\n", responseObj.Errors.Select(x => x.Message)));
         responseObj.Data.Should().NotBeNull();
     }
 
