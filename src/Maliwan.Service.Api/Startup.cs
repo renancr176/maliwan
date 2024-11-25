@@ -54,7 +54,7 @@ public class Startup : IStartup
         services.AddHealthChecks();
         services.AddSwaggerGen(c =>
         {
-            c.SwaggerDoc("v1", new OpenApiInfo { Title = "DigaX API", Version = "v1" });
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "Maliwan API", Version = "v1" });
             c.SchemaFilter<SwaggerSchemaFilter>();
             c.OperationFilter<SwaggerOperationFilter>();
 
