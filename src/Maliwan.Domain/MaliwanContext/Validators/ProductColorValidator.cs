@@ -66,10 +66,10 @@ public class ProductColorValidator : EntityValidator<ProductColor>, IProductColo
             .WithMessage(_localizer.GetString(nameof(SkuIsRequired)))
             .MinimumLength(1)
             .WithErrorCode(nameof(SkuMinLength))
-            .WithMessage(_localizer.GetString(nameof(SkuMinLength)).ToString().Replace("#MinLength", "3"))
+            .WithMessage(_localizer.GetString(nameof(SkuMinLength)).ToString().Replace("#MinLength", "1"))
             .MaximumLength(5)
             .WithErrorCode(nameof(SkuMaxLength))
-            .WithMessage(_localizer.GetString(nameof(SkuMaxLength)).ToString().Replace("#MaxLength", "255"))
+            .WithMessage(_localizer.GetString(nameof(SkuMaxLength)).ToString().Replace("#MaxLength", "5"))
             .MustAsync(UniqueSkuAsync)
             .WithErrorCode(nameof(SkuAlreadyExists))
             .WithMessage(_localizer.GetString(nameof(SkuAlreadyExists)));

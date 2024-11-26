@@ -102,10 +102,10 @@ public class ProductValidator : EntityValidator<Product>, IProductValidator
             .WithMessage(_localizer.GetString(nameof(SkuIsRequired)))
             .MinimumLength(1)
             .WithErrorCode(nameof(SkuMinLength))
-            .WithMessage(_localizer.GetString(nameof(SkuMinLength)).ToString().Replace("#MinLenght", "3"))
+            .WithMessage(_localizer.GetString(nameof(SkuMinLength)).ToString().Replace("#MinLenght", "1"))
             .MaximumLength(5)
             .WithErrorCode(nameof(SkuMaxLength))
-            .WithMessage(_localizer.GetString(nameof(SkuMaxLength)).ToString().Replace("#MaxLenght", "255"))
+            .WithMessage(_localizer.GetString(nameof(SkuMaxLength)).ToString().Replace("#MaxLenght", "5"))
             .MustAsync(UniqueSkuAsync)
             .WithErrorCode(nameof(SkuAlreadyExists))
             .WithMessage(_localizer.GetString(nameof(SkuAlreadyExists)));
