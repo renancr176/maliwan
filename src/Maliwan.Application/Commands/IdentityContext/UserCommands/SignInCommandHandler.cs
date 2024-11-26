@@ -36,6 +36,8 @@ public class SignInCommandHandler : IRequestHandler<SignInCommand, SignInRespons
     {
         try
         {
+            await _mediator.Send(new DeleteExpiredRefreshTokensCommand() { AggregateId = Guid.NewGuid() });
+
             var result = await _signInManager.PasswordSignInAsync(request.UserName, request.Password, false, true);
 
             if (!result.Succeeded)

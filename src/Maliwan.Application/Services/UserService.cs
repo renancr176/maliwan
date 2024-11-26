@@ -312,8 +312,8 @@ public class UserService : IUserService
                 ValidateLifetime = true
             };
             var tokenHandler = new JwtSecurityTokenHandler();
-
-            if (tokenHandler.ValidateToken(encodedJwt, tokenValidationParameters, out var securityToken) != null)
+            var result = await tokenHandler.ValidateTokenAsync(encodedJwt, tokenValidationParameters);
+            if (result != null && result.IsValid)
             {
                 await _mediator.Publish(new DomainNotification(
                     nameof(CommonMessages.JwtTokenIsStillValid),

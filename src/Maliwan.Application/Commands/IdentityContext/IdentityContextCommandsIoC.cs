@@ -10,8 +10,6 @@ public static class IdentityContextCommandsIoC
 {
     public static void AddIdentityContextCommands(this IServiceCollection services)
     {
-        #region User
-
         services.AddScoped<IRequestHandler<SignInCommand, SignInResponseModel>, SignInCommandHandler>();
         services.AddScoped<IRequestHandler<SignInRefreshCommand, SignInResponseModel?>, SignInRefreshCommandHandler>();
         services.AddScoped<IRequestHandler<SignUpCommand, UserModel>, SignUpCommandHandler>();
@@ -19,7 +17,6 @@ public static class IdentityContextCommandsIoC
         services.AddScoped<IRequestHandler<ResetPasswordCommand, string>, ResetPasswordCommandHandler>();
         services.AddScoped<IRequestHandler<ConfirmEmailCommand, bool>, ConfirmEmailCommandHandler>();
         services.AddScoped<IRequestHandler<UserAddRoleCommand, bool>, UserAddRoleCommandHandler>();
-
-        #endregion
+        services.AddScoped<IRequestHandler<DeleteExpiredRefreshTokensCommand, bool>, DeleteExpiredRefreshTokensCommandHandler>();
     }
 }

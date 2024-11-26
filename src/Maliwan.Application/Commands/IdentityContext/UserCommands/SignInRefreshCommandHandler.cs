@@ -29,6 +29,7 @@ public class SignInRefreshCommandHandler : IRequestHandler<SignInRefreshCommand,
     {
         try
         {
+            await _mediator.Send(new DeleteExpiredRefreshTokensCommand() { AggregateId = Guid.NewGuid() });
             return await _userService.RefreshTokenAsync(command.AccessToken, command.RefreshToken);
         }
         catch (Exception e)
