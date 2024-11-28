@@ -38,7 +38,10 @@ public class SubcategoryQuery : ISubcategoryQuery
         _subcategoryRepository = subcategoryRepository;
     }
 
-    private IEnumerable<string> Includes = null;
+    private IEnumerable<string> Includes = new []
+    {
+        nameof(Subcategory.Category)
+    };
 
     public async Task<SubcategoryModel?> GetByIdAsync(int id)
     {
@@ -57,12 +60,16 @@ public class SubcategoryQuery : ISubcategoryQuery
         return default;
     }
 
-    public async Task<IEnumerable<SubcategoryModel>?> GetAllAsync()
+    public async Task<IEnumerable<SubcategoryModel>?> GetAllAsync(int? idCategory = null, bool? active = null)
     {
         try
         {
             var isAdmin = await _userService.CurrentUserHasRole(RoleEnum.Admin);
-            return _mapper.Map<IEnumerable<SubcategoryModel>>(await _subcategoryRepository.FindAsync(e => isAdmin || e.Active, Includes));
+            return _mapper.Map<IEnumerable<SubcategoryModel>>(await _subcategoryRepository.FindAsync(e => 
+            (isAdmin || e.Active) 
+            && (!idCategory.HasValue || e.IdCategory == idCategory)
+            && (!active.HasValue || e.Active == active), 
+            Includes));
         }
         catch (Exception e)
         {
@@ -92,14 +99,18 @@ public class SubcategoryQuery : ISubcategoryQuery
             {
                 case ConditionTypeEnum.Or:
                     filters = e =>
-                        ((!string.IsNullOrEmpty(request.Name) && e.Name.Contains(request.Name))
-                         || (request.Active.HasValue && e.Active == request.Active)
+                        ((request.IdCategory.HasValue && e.IdCategory == request.IdCategory)
+                        || (!string.IsNullOrEmpty(request.Name) && e.Name.Contains(request.Name))
+                        || (!string.IsNullOrEmpty(request.Sku) && e.Sku.Contains(request.Sku))
+                        || (request.Active.HasValue && e.Active == request.Active)
                         );
                     break;
                 default:
                 case ConditionTypeEnum.And:
                     filters = e =>
-                        (string.IsNullOrEmpty(request.Name) || e.Name.Contains(request.Name))
+                        (!request.IdCategory.HasValue || e.IdCategory == request.IdCategory)
+                        && (string.IsNullOrEmpty(request.Name) || e.Name.Contains(request.Name))
+                        && (string.IsNullOrEmpty(request.Sku) || e.Sku.Contains(request.Sku))
                         && (!request.Active.HasValue || e.Active == request.Active);
                     break;
             }

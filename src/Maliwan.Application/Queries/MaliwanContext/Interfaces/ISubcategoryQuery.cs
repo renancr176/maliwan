@@ -7,6 +7,6 @@ namespace Maliwan.Application.Queries.MaliwanContext.Interfaces;
 public interface ISubcategoryQuery
 {
     Task<SubcategoryModel?> GetByIdAsync(int id);
-    Task<IEnumerable<SubcategoryModel>?> GetAllAsync();
+    Task<IEnumerable<SubcategoryModel>?> GetAllAsync(int? idCategory = null, bool? active = null);
     Task<PagedResponse<SubcategoryModel>?> SearchAsync(SubcategorySearchRequest request);
 }

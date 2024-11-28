@@ -45,9 +45,9 @@ namespace Maliwan.Service.Api.Controllers
         [HttpGet]
         [SwaggerResponse(200, Type = typeof(BaseResponse<IEnumerable<SubcategoryModel>?>))]
         [SwaggerResponse(400, Type = typeof(BaseResponse))]
-        public async Task<IActionResult> GetAllAsync()
+        public async Task<IActionResult> GetAllAsync([FromQuery] int? idCategory, [FromQuery] bool? active)
         {
-            return Response(await _subcategoryQuery.GetAllAsync());
+            return Response(await _subcategoryQuery.GetAllAsync(idCategory, active));
         }
 
         /// <summary>
