@@ -1,6 +1,4 @@
-﻿using Maliwan.Domain.MaliwanContext.Enums;
-
-namespace Maliwan.Application.Commands.MaliwanContext.CustomerCommands;
+﻿namespace Maliwan.Application.Commands.MaliwanContext.CustomerCommands;
 
 public class UpdateCustomerCommand : CreateCustomerCommand
 {
@@ -10,8 +8,8 @@ public class UpdateCustomerCommand : CreateCustomerCommand
     {
     }
 
-    public UpdateCustomerCommand(Guid id, string name, string document, CustomerTypeEnum type)
-        : base(name, document, type)
+    public UpdateCustomerCommand(Guid id, string name, string document)
+        : base(name, document)
     {
         Id = id;
     }

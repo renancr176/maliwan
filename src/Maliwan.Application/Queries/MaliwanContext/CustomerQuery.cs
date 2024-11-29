@@ -100,7 +100,7 @@ public class CustomerQuery : ICustomerQuery
                 case ConditionTypeEnum.Or:
                     filters = e =>
                         ((!string.IsNullOrEmpty(request.Name) && e.Name.Contains(request.Name))
-                         || (!string.IsNullOrEmpty(request.Document) && e.Name.Contains(request.Document))
+                         || (!string.IsNullOrEmpty(request.Document) && e.Document.Contains(request.Document.MaskCpfCnpj()))
                          || (request.Type.HasValue && e.Type == request.Type)
                         );
                     break;
@@ -108,8 +108,8 @@ public class CustomerQuery : ICustomerQuery
                 case ConditionTypeEnum.And:
                     filters = e =>
                         (string.IsNullOrEmpty(request.Name) || e.Name.Contains(request.Name))
-                        && (!string.IsNullOrEmpty(request.Document) && e.Name.Contains(request.Document))
-                        && (request.Type.HasValue && e.Type == request.Type);
+                        && (string.IsNullOrEmpty(request.Document) || e.Document.Contains(request.Document.MaskCpfCnpj()))
+                        && (!request.Type.HasValue || e.Type == request.Type);
                     break;
             }
 

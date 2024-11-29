@@ -134,8 +134,7 @@ public class CustomerControllerTest
 
         var request = new CreateCustomerCommand(
             entity.Name,
-            entity.Document,
-            entity.Type
+            entity.Document
         );
 
         // Act 
@@ -162,8 +161,7 @@ public class CustomerControllerTest
         var request = new UpdateCustomerCommand(
             entity.Id,
             entity.Name,
-            entity.Document,
-            entity.Type
+            entity.Document
             );
 
         if (string.IsNullOrEmpty(_testsFixture.AdminAccessToken))

@@ -12,8 +12,10 @@ using Maliwan.Application.Commands.MaliwanContext.ProductCommands;
 using Maliwan.Application.Commands.MaliwanContext.ProductSizeCommands;
 using Maliwan.Application.Commands.MaliwanContext.StockCommands;
 using Maliwan.Application.Commands.MaliwanContext.SubcategoryCommands;
+using Maliwan.Domain.Core.Extensions;
 using Maliwan.Domain.IdentityContext.Entities;
 using Maliwan.Domain.MaliwanContext.Entities;
+using Maliwan.Domain.MaliwanContext.Enums;
 
 namespace Maliwan.Application.AutoMapper;
 
@@ -47,8 +49,18 @@ public class CommandToEntityMappingProfile : Profile
 
         #region Customer
 
-        CreateMap<CreateCustomerCommand, Customer>();
-        CreateMap<UpdateBrandCommand, Customer>();
+        CreateMap<CreateCustomerCommand, Customer>()
+            .ForMember(dest => dest.Type, 
+            act => act.MapFrom(src => 
+            src.Document.IsCnpj() 
+            ? CustomerTypeEnum.LegalEntity 
+            : CustomerTypeEnum.Individual));
+        CreateMap<UpdateCustomerCommand, Customer>()
+            .ForMember(dest => dest.Type, 
+            act => act.MapFrom(src => 
+            src.Document.IsCnpj() 
+            ? CustomerTypeEnum.LegalEntity 
+            : CustomerTypeEnum.Individual));
 
         #endregion
 
