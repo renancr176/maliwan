@@ -18,7 +18,7 @@ namespace Maliwan.Application.Commands.MaliwanContext;
 
 public static class MaliwanContextCommandsIoC
 {
-    public static void AddMaliwanContextCommands(this IServiceCollection services)
+    public static void AddMaliwanContextCommands(this IServiceCollection services)    
     {
         #region Brands
 

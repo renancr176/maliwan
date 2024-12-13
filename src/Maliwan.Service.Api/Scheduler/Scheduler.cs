@@ -25,7 +25,7 @@ public static class Scheduler
         {
             #region Config
 
-            q.SchedulerId = Assembly.GetCallingAssembly()?.GetName()?.Name ?? "DigaX.Services.Api";
+            q.SchedulerId = Assembly.GetCallingAssembly()?.GetName()?.Name ?? "Maliwan.Services.Api";
             q.UseMicrosoftDependencyInjectionJobFactory();
             q.UseSimpleTypeLoader();
             q.UseInMemoryStore();
